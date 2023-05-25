@@ -4,6 +4,7 @@ const MySql = require("../routes/utils/MySql");
 const DButils = require("../routes/utils/DButils");
 const bcrypt = require("bcrypt");
 
+
 router.post("/Register", async (req, res, next) => {
   try {
     // parameters exists
@@ -58,17 +59,22 @@ router.post("/Login", async (req, res, next) => {
     }
 
     // Set cookie
-    req.session.user_id = user.user_id;
+    req.session.username = user.username;
+    console.log(req.session.username); // Check the session object for the presence of username
+
+
 
 
     // return cookie
     res.status(200).send({ message: "login succeeded", success: true });
+    
   } catch (error) {
     next(error);
   }
 });
 
 router.post("/Logout", function (req, res) {
+  console.log(req.session.username); // Check the session object for the presence of username
   req.session.reset(); // reset the session info --> send cookie when  req.session == undefined!!
   res.send({ success: true, message: "logout succeeded" });
 });

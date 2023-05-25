@@ -98,7 +98,7 @@ paths:
             schema:
               type: object
               properties:
-                reciepeId:
+                recipeId:
                   type: string
                   description: reciepe's id which the user saved
                   example: 716429
@@ -138,13 +138,8 @@ paths:
         content:
           application/json:
             schema:
-              content:
-                application/json:
-                  schema:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/FullRecipeReview'
-        responses:
+              $ref: '#/components/schemas/RecipePreview'
+      responses:
         "200":
           description: The Recipe successfully added
         "400":
@@ -293,7 +288,7 @@ components:
     RecipePreview:
       type: object
       properties:
-        id:
+        recipe_id:
           type: integer
           description: recipe identifier
           example: 102
@@ -329,7 +324,7 @@ components:
       FullRecipeReview:
         type: object
         properties:
-          id:
+          recipe_id:
             type: integer
             description: recipe identifier
             example: 102
