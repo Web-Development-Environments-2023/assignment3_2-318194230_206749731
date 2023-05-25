@@ -109,6 +109,105 @@ paths:
           description: user is not authorized
       security:
       - cookieAuth: []
+
+  /users/MyRecipes:
+    get:
+      tags:
+      - Users
+      summary: Return the recipes of the logging user
+      description: Get an array of recipes that were created by a specific user
+      operationId: GetUserRecipes
+      responses:
+        "200":
+          description: data about the user's created recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipePreview'
+        "401":
+          description: user is not authorized
+
+    post:
+      tags:
+      - Users
+      summary: add recipe to the user's recipes list 
+      description: add recipe to the user's recipes list 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              content:
+                application/json:
+                  schema:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FullRecipeReview'
+        responses:
+        "200":
+          description: The Recipe successfully added
+        "400":
+          description: Invalid input
+
+  /users/FamilyRecipes:
+    get:
+      tags:
+      - Users
+      summary: Return the family recipes of the logging user
+      description: Get an array of recipes that were created by a specific user
+      operationId: GetUserRecipes
+      responses:
+        "200":
+          description: data about the user's created recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FamilyRecipe'
+        "401":
+          description: user is not authorized
+  /users/last-viewed:
+    get:
+      summary: Get the  3 recipes viewed by the user
+      description: |
+        Retrieves the  3 recipes viewed by the logged-in user. If the user is not logged in, provides an option to log in using the website registration button.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipesList'
+        '401':
+          description: Unauthorized - User not logged in
+      security:
+        - cookieAuth: []
+    post:
+      tags:
+      - Users
+      summary: Add recipe to the viewed list of the user
+      description: Add recipe to the viewed list of the user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reciepeId:
+                  type: string
+                  description: reciepe's id which the user viewed
+                  example: 716429
+      responses:
+        "200":
+          description: The Recipe successfully saved as viewed
+        "401":
+          description: user is not authorized
+      security:
+      - cookieAuth: []
+
+  
   /recipes/{recipeId}:
     get:
       tags:
@@ -227,4 +326,125 @@ components:
           type: boolean
           description: indication if the recipe is gluten free
           example: false
-  
+      FullRecipeReview:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: recipe identifier
+            example: 102
+          title:
+            type: string
+            description: recipe name
+            example: Simple Macaroni and Cheese
+          image:
+            type: string
+            description: recipe image
+            format: URL
+            example: https://spoonacular.com/recipeimages/655455-566x370.jpg
+          readyInMinutes:
+            type: integer
+            description: the time takes to make this recipe
+            example: 45
+          popularity:
+            type: integer
+            description: how many likes got this recipe
+            example: 5987
+          vegetarian:
+            type: boolean
+            description: indication if the recipe is vegetarian
+            example: false
+          vegan:
+            type: boolean
+            description: indication if the recipe is vegan
+            example: false
+          glutenFree:
+            type: boolean
+            description: indication if the recipe is gluten free
+            example: false
+          IngredientsAndAmount:
+            type: array
+            description: ingredients list and the quantities.
+            example: [ { name: "milk", number: 2 } ]
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                number:
+                  type: integer
+              example: { name: "milk", number: 2 }
+          instructions:
+            type: string
+            description: The instructions for preparing the recipe
+          servings:
+            type: integer
+            format: int64
+            description: The number of servings the recipe makes
+
+    FamilyRecipe:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: recipe identifier
+          example: 102
+        recipeName:
+          type: string
+          description: name of the recipe
+          example: Grandma's Apple Pie
+        recipeOwner:
+          type: string
+          description: person who owns the recipe
+          example: Grandma Mary
+        components:
+          type: array
+          description: list of ingredients and their quantities
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: ingredient name
+              quantity:
+                type: string
+                description: quantity or measurement of the ingredient
+            example:
+              - name: apples
+                quantity: 4
+              - name: sugar
+                quantity: 1 cup
+        preparationMethod:
+          type: string
+          description: method of preparing the recipe
+        images:
+          type: array
+          description: pictures of the food or family members preparing the food
+          items:
+            type: string
+            format: URL
+          example:
+            - https://example.com/image1.jpg
+            - https://example.com/image2.jpg
+        specialOccasions:
+          type: array
+          description: special occasions or traditions associated with the recipe
+          items:
+            type: string
+          example:
+            - Hanukkah
+            - Passover
+        cookingTime:
+          type: integer
+          description: total cooking time in minutes
+          example: 60
+        serves:
+          type: integer
+          description: number of servings the recipe makes
+          example: 8
+
+    RecipesList:
+      type: array
+      numberofItems: 3
+      items:
+        $ref: '#/components/schemas/RecipePreview'
