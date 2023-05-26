@@ -138,7 +138,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RecipePreview'
+              $ref: '#/components/schemas/FullRecipeReview'
       responses:
         "200":
           description: The Recipe successfully added
@@ -151,7 +151,6 @@ paths:
       - Users
       summary: Return the family recipes of the logging user
       description: Get an array of recipes that were created by a specific user
-      operationId: GetUserRecipes
       responses:
         "200":
           description: data about the user's created recipes
@@ -163,6 +162,21 @@ paths:
                   $ref: '#/components/schemas/FamilyRecipe'
         "401":
           description: user is not authorized
+    post:
+      tags:
+        - Users
+      summary: Create a new family recipe
+      description: Create a new recipe associated with the logged-in user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FamilyRecipe'
+      responses:
+        "201":
+          description: Recipe created successfully
+        "401":
+          description: User is not authorized
   /users/last-viewed:
     get:
       summary: Get the  3 recipes viewed by the user
@@ -321,7 +335,7 @@ components:
           type: boolean
           description: indication if the recipe is gluten free
           example: false
-      FullRecipeReview:
+    FullRecipeReview:
         type: object
         properties:
           recipe_id:
@@ -380,7 +394,7 @@ components:
     FamilyRecipe:
       type: object
       properties:
-        id:
+        recipe_id:
           type: integer
           description: recipe identifier
           example: 102

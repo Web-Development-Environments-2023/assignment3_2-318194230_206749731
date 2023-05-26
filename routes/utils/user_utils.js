@@ -10,10 +10,22 @@ async function getFavoriteRecipes(username){
 }
 
 
-async function getRecipeDetailsfromDB(username)
+async function getRecipeDetailsfromDBmyrecipes(username)
 {
     try {
         const query = `SELECT recipe_id, title, image, readyInMinutes, popularity, vegetarian, vegan, glutenFree FROM myrecipes WHERE username = '${username}'`;
+        const result = await DButils.execQuery(query);
+        return result;
+      } catch (error) {
+        throw new Error("Failed to retrieve recipes for the specified username.");
+      }
+
+}
+
+async function getRecipeDetailsfromDBfamilyrecipes(username)
+{
+    try {
+        const query = `SELECT username, recipe_id, recipeName,recipeOwner, components, preparationMethod, images, specialOccasions, cookingTime, serves FROM familyrecipes WHERE username = '${username}'`;
         const result = await DButils.execQuery(query);
         return result;
       } catch (error) {
@@ -28,4 +40,6 @@ async function getRecipeDetailsfromDB(username)
 
 exports.markAsFavorite = markAsFavorite;
 exports.getFavoriteRecipes = getFavoriteRecipes;
-exports.getRecipeDetailsfromDB = getRecipeDetailsfromDB;
+exports.getRecipeDetailsfromDBmyrecipes = getRecipeDetailsfromDBmyrecipes;
+exports.getRecipeDetailsfromDBfamilyrecipes = getRecipeDetailsfromDBfamilyrecipes;
+
