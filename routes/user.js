@@ -36,7 +36,6 @@ router.use(async function (req, res, next)
 router.post('/favorites', async (req,res,next) => {
   try{
     const username = req.session.username;
-    console.log("this fuck you : "+username);
     const recipe_id = req.body.recipeId;
     console.log(recipe_id);
     await user_utils.markAsFavorite(username,recipe_id);
@@ -138,31 +137,62 @@ router.get('/FamilyRecipes', async (req, res, next) => {
   }
 });
 
-router.post("/FamilyRecipes", async (req, res, next) => {
+// Route handler
+router.post("/LastViewed", async (req, res, next) => {
   try {
     const username = req.session.username;
-    let recipe_details = {
-      recipe_id: req.body.recipe_id,
-      recipeName: req.body.recipeName,
-      recipeOwner: req.body.recipeOwner,
-      components: req.body.components,
-      preparationMethod: req.body.preparationMethod,
-      images: req.body.images,
-      specialOccasions: req.body.specialOccasions,
-      cookingTime: req.body.cookingTime,
-      serves: req.body.serves
-    };
-    
+    const recipeId = req.body.recipe_id;
 
-    await DButils.execQuery(
-      `INSERT INTO familyrecipes (username, recipe_id, recipeName,recipeOwner, components, preparationMethod, images, specialOccasions, cookingTime, serves) VALUES ('${username}', ${recipe_details.recipe_id}, '${recipe_details.recipeName}', '${recipe_details.recipeOwner}','${JSON.stringify(recipe_details.components)}', '${recipe_details.preparationMethod}', '${JSON.stringify(recipe_details.images)}', '${JSON.stringify(recipe_details.specialOccasions)}', ${recipe_details.cookingTime}, ${recipe_details.serves})`
-    );
-    
-    res.status(201).send({ message: "Family Recipe added", success: true });
+    // Call the helper function to check and insert the entry
+    await checkAndInsertEntry(username, recipeId);
+
+    res.status(201).send({ message: "Recipe added", success: true });
   } catch (error) {
+    res.status(400).send({ message: error.message, success: false });
+  }
+});
+
+
+router.get('/LastViewed', async (req, res, next) => {
+  try {
+    // Get the user ID from the session
+    const username = req.session.username;
+    let recipes = await  user_utils.getRecipeDetailsfromDB3lastseenrecipes(username);
+    const results = [];
+    
+    for (const recipe of recipes) {
+      const recipeDetails = await recipe_utils.getRecipeDetails(recipe.recipe_id);
+      results.push(recipeDetails);
+    }
+    // Send the results as the response with a status code of 200 (OK)
+    res.status(200).send(results);
+  } catch (error) {
+    // Pass any errors to the error handling middleware
     next(error);
   }
 });
 
 
+
+
+// Helper function to check and insert the entry
+async function checkAndInsertEntry(username, recipeId) {
+  // Check if the username and recipe_id already exist in the table
+  const existingEntry = await DButils.execQuery(
+    `SELECT * FROM 3lastseenrecipes WHERE username = '${username}' AND recipe_id = ${recipeId}`
+  );
+
+  if (existingEntry.length > 0) {
+    // If the entry already exists, throw an error
+    throw new Error("Entry already exists");
+  }
+
+  // Insert the new entry into the table
+  const currentTime = new Date();
+  const formattedTime = currentTime.toISOString().slice(0, 19).replace('T', ' ');
+
+  await DButils.execQuery(
+    `INSERT INTO 3lastseenrecipes (username, recipe_id, date) VALUES ('${username}', ${recipeId}, '${formattedTime}')`
+  );
+}
 module.exports = router;

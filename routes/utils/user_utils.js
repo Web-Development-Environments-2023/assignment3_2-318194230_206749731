@@ -35,6 +35,25 @@ async function getRecipeDetailsfromDBfamilyrecipes(username)
 }
 
 
+async function getRecipeDetailsfromDB3lastseenrecipes(username) {
+  try {
+    const query = `
+      SELECT recipe_id
+      FROM 3lastseenrecipes
+      WHERE username = '${username}'
+      ORDER BY date DESC
+      LIMIT 3
+    `;
+    
+    const result = await DButils.execQuery(query);
+    
+
+    return result;
+  } catch (error) {
+    throw new Error("Failed to retrieve last seen recipes for the specified username.");
+  }
+}
+
 
 
 
@@ -42,4 +61,4 @@ exports.markAsFavorite = markAsFavorite;
 exports.getFavoriteRecipes = getFavoriteRecipes;
 exports.getRecipeDetailsfromDBmyrecipes = getRecipeDetailsfromDBmyrecipes;
 exports.getRecipeDetailsfromDBfamilyrecipes = getRecipeDetailsfromDBfamilyrecipes;
-
+exports.getRecipeDetailsfromDB3lastseenrecipes = getRecipeDetailsfromDB3lastseenrecipes;

@@ -177,22 +177,21 @@ paths:
           description: Recipe created successfully
         "401":
           description: User is not authorized
-  /users/last-viewed:
+  /users/LastViewed:
     get:
+      tags:
+      - Users
       summary: Get the  3 recipes viewed by the user
-      description: |
-        Retrieves the  3 recipes viewed by the logged-in user. If the user is not logged in, provides an option to log in using the website registration button.
+      description: Retrieves the  3 recipes viewed by the logged-in user. If the user is not logged in, provides an option to log in using the website registration button.
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RecipesList'
-        '401':
-          description: Unauthorized - User not logged in
-      security:
-        - cookieAuth: []
+                  $ref: '#/components/schemas/RecipePreview'
+        "401":
+          description: user is not authorized
     post:
       tags:
       - Users
@@ -204,7 +203,7 @@ paths:
             schema:
               type: object
               properties:
-                reciepeId:
+                recipe_id:
                   type: string
                   description: reciepe's id which the user viewed
                   example: 716429
@@ -452,8 +451,8 @@ components:
           description: number of servings the recipe makes
           example: 8
 
-    RecipesList:
-      type: array
-      numberofItems: 3
-      items:
-        $ref: '#/components/schemas/RecipePreview'
+    # RecipesList:
+    #   type: array
+    #   numberofItems: 3
+    #   items:
+    #     $ref: '#/components/schemas/RecipePreview'
