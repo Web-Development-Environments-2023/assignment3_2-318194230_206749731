@@ -60,7 +60,6 @@ router.post("/Login", async (req, res, next) => {
 
     // Set cookie
     req.session.username = user.username;
-    console.log(req.session.username); // Check the session object for the presence of username
 
 
 
@@ -74,7 +73,6 @@ router.post("/Login", async (req, res, next) => {
 });
 
 router.post("/Logout", function (req, res) {
-  console.log(req.session.username); // Check the session object for the presence of username
   req.session.reset(); // reset the session info --> send cookie when  req.session == undefined!!
   res.send({ success: true, message: "logout succeeded" });
 });
