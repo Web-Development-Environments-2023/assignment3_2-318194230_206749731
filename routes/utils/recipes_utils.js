@@ -104,74 +104,35 @@ async function searchRecipes(query, numberOfResults , cuisine, diet, intolerance
   
     return results;
   }
-  
-  async function helfuncRandomRecipesApi(){
-    return await axios.get(`${api_domain}/random`, {
+
+async function HelpFuncRandom() {
+    const response = await axios.get(`${api_domain}/random`, {
         params: {
-            number:3,
-            apiKey:'0bd11a8b7e65479fb82795f6f7730888'    //process.env.spooncular_apiKey    dont forget to return to this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            number: 3,
+            apiKey: '0bd11a8b7e65479fb82795f6f7730888' 
         }
     });
-
+    return response;
   }
-//   async function getRandomRecipes(){
-//     let random_list  = await helfuncRandomRecipesApi();
-//     let filtered_random_list = random_list.data.recipes.filter((random) => (random.instructions != "") && (random.image)) 
-//     if (filtered_random_list.length < 3)
-//         return getRandomThreeRecipes(); //again
-//     return extractPreviewRecipeDetails(user_id,[filtered_random_list[0], filtered_random_list[1], filtered_random_list[2]]);
 
-//     }
-
-async function extractPreviewRecipeDetails(username,recipes_info){
-    recipes=[]
-    for (const recipe_info of recipes_info){    
-        if(recipe_info){
-            const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info;
-            // let hasWatched = false
-            // let hasFavorited = false
-            // if (user_id){
-            //     hasWatched= await user_utils.checkIfWatchedRecipes(user_id,id)
-            //     hasFavorited = await user_utils.checkIfFavoriteRecipes(user_id,id)}
-            recipes.push({
-                id: id,
-                title: title,
-                readyInMinutes: readyInMinutes,
-                image: image,
-                popularity: aggregateLikes,
-                vegan: vegan,
-                vegetarian: vegetarian,
-                glutenFree: glutenFree,
-                // hasWatched: hasWatched,
-                // hasFavorited: hasFavorited
-            })
-        }
+async function getRandomRecipes() {
+    let random_pool = await HelpFuncRandom();
+    let filtered_random_pool = random_pool.data.recipes.filter((random) => (random.instructions != "") && (random.image && random.title))
+    if (filtered_random_pool < 3)
+        return getRandomRecipes();
+    const results = [];
+    for (let i = 0; i < filtered_random_pool.length; i++) {
+      const result = filtered_random_pool[i];
+      const recipeDetails = await getRecipeDetails(result.id, false, false);
+      results.push(recipeDetails);
     }
-    return recipes;
+  
+    return results;
+
 }
 
-async function getRandomThreeRecipes(username) {
-    const random_list = await helfuncRandomRecipesApi();
-    const filtered_random_list = random_list.data.recipes.filter(
-      (random) => random.instructions !== "" && random.image
-    );
-  
-    if (filtered_random_list.length < 3) {
-      return getRandomThreeRecipes();
-    }
-  
-    const selectedRecipes = [
-      filtered_random_list[0],
-      filtered_random_list[1],
-      filtered_random_list[2],
-    ];
-  
-    return extractPreviewRecipeDetails(username, selectedRecipes);
-  }
-  
 
-
-exports.getRandomThreeRecipes=getRandomThreeRecipes;
+exports.getRandomRecipes = getRandomRecipes
 exports.searchRecipes = searchRecipes;
 exports.getRecipeDetails = getRecipeDetails;
 

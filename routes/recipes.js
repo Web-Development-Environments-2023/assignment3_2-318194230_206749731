@@ -34,8 +34,7 @@ router.get("/searchForRecipe/:query", async (req, res, next) => {
 
 router.get("/random", async (req, res, next) => {
   try {
-    user = req.session.username;
-    const recipe = await recipes_utils.getRandomThreeRecipes(user);
+    const recipes = await recipes_utils.getRandomRecipes ();
     res.send(recipe);
   } catch (error) {
     next(error);
