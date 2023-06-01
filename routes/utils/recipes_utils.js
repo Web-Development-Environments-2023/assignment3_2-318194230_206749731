@@ -104,33 +104,49 @@ async function searchRecipes(query, numberOfResults , cuisine, diet, intolerance
   
     return results;
   }
-
-async function HelpFuncRandom() {
-    const response = await axios.get(`${api_domain}/random`, {
+async function helpRandom(){
+    return await axios.get(`${api_domain}/random`, {
         params: {
-            number: 3,
-            apiKey: '0bd11a8b7e65479fb82795f6f7730888' 
+            number: 1,
+            apiKey:'0bd11a8b7e65479fb82795f6f7730888'    //process.env.spooncular_apiKey    dont forget to return to this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
     });
-    return response;
-  }
-
-async function getRandomRecipes() {
-    let random_pool = await HelpFuncRandom();
-    let filtered_random_pool = random_pool.data.recipes.filter((random) => (random.instructions != "") && (random.image && random.title))
-    if (filtered_random_pool < 3)
-        return getRandomRecipes();
-    const results = [];
-    for (let i = 0; i < filtered_random_pool.length; i++) {
-      const result = filtered_random_pool[i];
-      const recipeDetails = await getRecipeDetails(result.id, false, false);
-      results.push(recipeDetails);
-    }
-  
-    return results;
-
 }
+async function getRandomRecipes() {
+    let array = [];
+    for (let i = 0; i < 3; i++) {
+        let search_response = await helpRandom();
+        while(!search_response.data.recipes[0].instructions){
+            search_response = await helpRandom();
 
+        }
+        array.push(search_response.data.recipes[0])
+    }
+    let output = array.map((result) => {
+        const {
+            id,
+            title,
+            readyInMinutes,
+            aggregateLikes,
+            vegetarian,
+            vegan,
+            glutenFree,
+            image
+        } = result;
+        return {
+            id: id,
+            title: title,
+            readyInMinutes: readyInMinutes,
+            aggregateLikes: aggregateLikes,
+            vegetarian: vegetarian,
+            vegan: vegan,
+            glutenFree: glutenFree,
+            image: image
+        }
+    });
+
+    return output;
+}
 
 exports.getRandomRecipes = getRandomRecipes
 exports.searchRecipes = searchRecipes;
