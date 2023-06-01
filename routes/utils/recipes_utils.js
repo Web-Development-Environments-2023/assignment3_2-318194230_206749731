@@ -1,5 +1,6 @@
 const axios = require("axios");
 const api_domain = "https://api.spoonacular.com/recipes";
+let spooncular_api_key = '45c0f9d00ed848f78e0b8d26a019f311'
 
 
 
@@ -11,8 +12,8 @@ async function getRecipeInformation(recipe_id) {
     return await axios.get(`${api_domain}/${recipe_id}/information`, {
         params: {
             includeNutrition: false,
-            apiKey:'0bd11a8b7e65479fb82795f6f7730888'    //process.env.spooncular_apiKey    dont forget to return to this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        }
+            apiKey: spooncular_api_key
+             }
     });
 }
 function getSteps(ex_list) {
@@ -85,7 +86,7 @@ async function searchResultsFromApi(query_str, num_of_results, cuisine, diet, in
             cuisine: cuisine,
             diet: diet,
             intolerances: intolerances,
-            apiKey:'0bd11a8b7e65479fb82795f6f7730888'    //process.env.spooncular_apiKey    dont forget to return to this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            apiKey:spooncular_api_key
         }
     });
 }
@@ -108,7 +109,7 @@ async function helpRandom(){
     return await axios.get(`${api_domain}/random`, {
         params: {
             number: 1,
-            apiKey:'0bd11a8b7e65479fb82795f6f7730888'    //process.env.spooncular_apiKey    dont forget to return to this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            apiKey:spooncular_api_key
         }
     });
 }
