@@ -216,7 +216,7 @@ paths:
       - cookieAuth: []
 
   
-  /recipes/{recipeId}:
+  /recipes/PreReviewRecipe/{recipeId}:
     get:
       tags:
       - Recipes
@@ -241,7 +241,7 @@ paths:
         "404":
           description: recipeId is not exists
 
-  /FullRecipeReview/{recipeId}:
+  /recipes/fullRecipeReview/{recipeId}:
     get:
       tags:
       - Recipes
@@ -266,7 +266,7 @@ paths:
         "404":
           description: recipeId is not exists
 
-  /searchForRecipe/{String}:
+  /recipes/searchForRecipe/{String}:
     get:
       tags:
       - Recipes
@@ -274,15 +274,15 @@ paths:
       description: returns search result for recipe
       operationId: searchForRecipe
       parameters:
-      - name: searchString
+      - name: String
         in: path
-        description: pass search string for looking up a recipe
+        description: pass string for looking up a recipe
         required: true
         style: simple
         explode: false
         schema:
           type: string
-      - name: numOfResults
+      - name: numberOfresults
         in: query
         description: number of records to return
         required: false
@@ -304,6 +304,33 @@ paths:
         explode: true
         schema:
           type: string
+          enum:
+          - African
+          - American
+          - British
+          - Cajun
+          - Caribbean
+          - Chinese
+          - Eastern European
+          - European
+          - French
+          - German
+          - Greek
+          - Indian
+          - Irish
+          - Italian
+          - Japanese
+          - Jewish
+          - Korean
+          - Latin American
+          - Mediterranean
+          - Mexican
+          - Middle Eastern
+          - Nordic
+          - Southern
+          - Spanish
+          - Thai
+          - Vietnamese
       - name: diet
         in: query
         description: type of diet
@@ -312,6 +339,17 @@ paths:
         explode: true
         schema:
           type: string
+          enum:
+          - Gluten Free
+          - Ketogenic
+          - Vegetarian
+          - Lacto-Vegetarian
+          - Ovo-Vegetarian
+          - Vegan
+          - Pescetarian
+          - Paleo
+          - Primal
+          - Whole30
       - name: intolerance
         in: query
         description: type of intolerance
@@ -320,15 +358,65 @@ paths:
         explode: true
         schema:
           type: string
+          enum:
+          - Dairy
+          - Egg
+          - Gluten
+          - Grain
+          - Peanut
+          - Seafood
+          - Sesame
+          - Shellfish
+          - Soy
+          - Sulfite
+          - Tree Nut
+          - Wheat
       responses:
         "200":
-          description: search results for recipe
+          description: Search results for recipe
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                arr:
+                  type: array
+                  description: Array of recipes
+                  example:
+                    - recipe1 part info
+                    - recipe2 part info
+                  items:
+                    $ref: '#/components/schemas/RecipePreview'
+              description: Return array of recipes
+      "400":
+        description: Bad request
+  /recipes/random:
+    get:
+      tags:
+        - Recipes
+      summary: Returns a list of three random recipes.
+      responses:
+        "200":
+          description: List of three recipes.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/arrayOfRecipes'
+                type: object
+                properties:
+                  arr:
+                    type: array
+                    description: Array of recipes
+                    items:
+                      $ref: '#/components/schemas/RecipePreview'
+          examples:
+            example1:
+              value:
+                arr:
+                  - first recipes part info
+                  - second recipe part info
+                  - thirs recipe part info
         "400":
-          description: Something went wrong
+          description: Invalid details.
 
 components:
   schemas:
@@ -465,7 +553,7 @@ components:
             type: boolean
             description: indication if the recipe is gluten free
             example: false
-          IngredientsAndAmount:
+          extendedIngredients:
             type: array
             description: ingredients list and the quantities.
             example: [ { name: "milk", number: 2 } ]
@@ -479,11 +567,20 @@ components:
               example: { name: "milk", number: 2 }
           instructions:
             type: string
-            description: The instructions for preparing the recipe
+            description: The instructions for preparing the recipe          
           servings:
             type: integer
             format: int64
             description: The number of servings the recipe makes
+          analyzedInstructions:
+            type: array
+            items:
+              items:
+                type: array
+                items:
+                  type: string
+            description: analayzed instructions
+            example: 1. put cheese on ...
 
     FamilyRecipe:
       type: object

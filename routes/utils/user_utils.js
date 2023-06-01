@@ -63,9 +63,9 @@ async function insertRecipeToMyRecipes(username, recipeDetails) {
 
     // Insert the new recipe into the "myrecipes" table
     await DButils.execQuery(
-        `INSERT INTO myrecipes (username, recipe_id, title, image, readyInMinutes, popularity, vegetarian, vegan, glutenFree, IngredientsAndAmount, instructions, servings)
+        `INSERT INTO myrecipes (username, recipe_id, title, image, readyInMinutes, popularity, vegetarian, vegan, glutenFree, extendedIngredients, instructions, servings)
          VALUES ('${username}', ${recipeDetails.recipe_id}, '${recipeDetails.title}', '${recipeDetails.image}', ${recipeDetails.readyInMinutes}, ${recipeDetails.popularity},
-                 ${recipeDetails.vegetarian}, ${recipeDetails.vegan}, ${recipeDetails.glutenFree}, '${JSON.stringify(recipeDetails.IngredientsAndAmount)}',
+                 ${recipeDetails.vegetarian}, ${recipeDetails.vegan}, ${recipeDetails.glutenFree}, '${JSON.stringify(recipeDetails.extendedIngredients)}',
                  '${recipeDetails.instructions.replace(/'/g, "''")}', ${recipeDetails.servings})`
     );
 }

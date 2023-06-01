@@ -3,23 +3,46 @@ var router = express.Router();
 const recipes_utils = require("./utils/recipes_utils");
 
 // This path returns a full details of a recipe by its id
- router.get("/FullRecipeReview/:recipeId", async (req, res, next) => {
+router.get("/PreReviewRecipe/:recipeId", async (req, res, next) => {
   try {
-    const recipe = await recipes_utils.getRecipeDetails(req.params.recipeId, true, false);
+    const recipe = await recipes_utils.getRecipeDetails(req.params.recipeId,req.session.username,false,false);
     res.send(recipe);
   } catch (error) {
     next(error);
   }
 });
 
-router.get("/:recipeId", async (req, res, next) => {
+ router.get("/fullRecipeReview/:recipeId", async (req, res, next) => {
   try {
-    const recipe = await recipes_utils.getRecipeDetails(req.params.recipeId);
+    const recipe = await recipes_utils.getRecipeDetails(req.params.recipeId, req.session.username, true, false);
     res.send(recipe);
   } catch (error) {
     next(error);
   }
 });
+
+router.get("/searchForRecipe/:query", async (req, res, next) => {
+  try {
+    query = req.params.query
+    const { numberOfResults, cuisine, diet, intolerances } = req.query;
+    const recipes = await recipes_utils.searchRecipes(query, numberOfResults, cuisine, diet, intolerances);
+    res.send(recipes);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/random", async (req, res, next) => {
+  try {
+    user = req.session.username;
+    const recipe = await recipes_utils.getRandomThreeRecipes(user);
+    res.send(recipe);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
 
 
 
