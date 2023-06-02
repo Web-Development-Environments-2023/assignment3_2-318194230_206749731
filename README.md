@@ -1,6 +1,6 @@
 <h1 style="color: black; font-weight: bold;">
   Recipe Search System Project
-  <img src="[https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkLK15b_qOdWNLnp0uh2EfKNs6Tn4Jv-2G6CJrAwvE&s](https://cdn.pixabay.com/photo/2020/07/03/05/02/tomatoes-5365186_1280.jpg)" width="50px" />
+  <img src="[https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkLK15b_qOdWNLnp0uh2EfKNs6Tn4Jv-2G6CJrAwvE&s](https://cdn.pixabay.com/photo/2020/07/03/05/02/tomatoes-5365186_1280.jpg)" width="30px" style="background-image: url('[https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkLK15b_qOdWNLnp0uh2EfKNs6Tn4Jv-2G6CJrAwvE&s'](https://cdn.pixabay.com/photo/2020/07/03/05/02/tomatoes-5365186_1280.jpg));"/>
 </h1>
 Project Description
 The Recipe Search System is a web-based application that allows users to search for recipes and manage their personal recipe collection. The system includes the following features:
