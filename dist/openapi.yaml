@@ -641,5 +641,3 @@ components:
         serves:
           type: integer
           description: number of servings the recipe makes
-          example: 8
-    

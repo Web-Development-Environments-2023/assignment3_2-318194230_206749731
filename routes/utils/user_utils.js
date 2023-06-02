@@ -70,6 +70,30 @@ async function insertRecipeToMyRecipes(username, recipeDetails) {
     );
 }
 
+
+
+// Inserts a new recipe into the "myrecipes" table in the database
+async function insertRecipeTofamilyrecipes(username, recipeDetails) {
+    // Check if the recipe ID already exists in the "myrecipes" table
+    const existingRecipe = await DButils.execQuery(
+        `SELECT recipe_id FROM familyrecipes WHERE recipe_id = ${recipeDetails.recipe_id}`
+    );
+
+    if (existingRecipe.length > 0) {
+        throw new Error("Recipe ID already exists.");
+    }
+
+    // Insert the new recipe into the "familyrecipes" table
+    await DButils.execQuery(
+        `INSERT INTO familyrecipes (username, recipe_id, recipeName, recipeOwner, components, preparationMethod, images, specialOccasions, cookingTime, serves)
+        VALUES ('${username}', ${recipeDetails.recipe_id}, '${recipeDetails.recipeName}', '${recipeDetails.recipeOwner}', '${JSON.stringify(recipeDetails.components)}',
+                '${recipeDetails.preparationMethod.replace(/'/g, "''")}', '${JSON.stringify(recipeDetails.images)}', '${JSON.stringify(recipeDetails.specialOccasions)}',
+                ${recipeDetails.cookingTime}, ${recipeDetails.serves})`
+    );
+  
+    
+}
+
 // Export all the functions to be used in other modules
 exports.markAsFavorite = markAsFavorite;
 exports.getFavoriteRecipes = getFavoriteRecipes;
@@ -77,3 +101,4 @@ exports.getRecipeDetailsfromDBmyrecipes = getRecipeDetailsfromDBmyrecipes;
 exports.getRecipeDetailsfromDBfamilyrecipes = getRecipeDetailsfromDBfamilyrecipes;
 exports.getRecipeDetailsfromDB3lastseenrecipes = getRecipeDetailsfromDB3lastseenrecipes;
 exports.insertRecipeToMyRecipes = insertRecipeToMyRecipes;
+exports.insertRecipeTofamilyrecipes = insertRecipeTofamilyrecipes;

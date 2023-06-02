@@ -1,6 +1,6 @@
 const axios = require("axios");
 const api_domain = "https://api.spoonacular.com/recipes";
-let spooncular_api_key = '45c0f9d00ed848f78e0b8d26a019f311'
+let spooncular_api_key ='1f0ca9f280ad4ec0887e1958e83c934c'
 
 
 
@@ -39,8 +39,7 @@ function getIngredientsList(ex_list){
     return short_list
 }
 
-//
-async function getRecipeDetails(recipe_id) {
+async function getRecipeDetails(recipe_id, username, includeNutrition_value, search_result) {
     let recipe_info = await getRecipeInformation(recipe_id);
     const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,instructions,extendedIngredients,servings,analyzedInstructions} = recipe_info.data;
     let json_data =  {
@@ -52,9 +51,6 @@ async function getRecipeDetails(recipe_id) {
         vegan: vegan,
         vegetarian: vegetarian,
         glutenFree: glutenFree,
-        // favorite:favorite,
-        // seen:seen,
-
     };
 
     
@@ -75,6 +71,22 @@ async function getRecipeDetails(recipe_id) {
     
 }
 
+
+async function getRecipeDet(recipe_id) {
+    let recipe_info = await getRecipeInformation(recipe_id);
+    let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
+
+    return {
+        recipe_id: id,
+        title: title,
+        readyInMinutes: readyInMinutes,
+        image: image,
+        popularity: aggregateLikes,
+        vegan: vegan,
+        vegetarian: vegetarian,
+        glutenFree: glutenFree,
+    }
+}
 async function searchResultsFromApi(query_str, num_of_results, cuisine, diet, intolerances){
     //, num_of_results, cuisine, diet, intolerances
     return await axios.get(`${api_domain}/complexSearch`, {
@@ -133,14 +145,14 @@ async function getRandomRecipes() {
             image
         } = result;
         return {
-            id: id,
+            recipe_id: id,
             title: title,
             readyInMinutes: readyInMinutes,
-            aggregateLikes: aggregateLikes,
-            vegetarian: vegetarian,
+            image: image,
+            popularity: aggregateLikes,
             vegan: vegan,
+            vegetarian: vegetarian,
             glutenFree: glutenFree,
-            image: image
         }
     });
 
@@ -150,6 +162,4 @@ async function getRandomRecipes() {
 exports.getRandomRecipes = getRandomRecipes
 exports.searchRecipes = searchRecipes;
 exports.getRecipeDetails = getRecipeDetails;
-
-
-
+exports.getRecipeDet=getRecipeDet
