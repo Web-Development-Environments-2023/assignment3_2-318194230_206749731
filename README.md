@@ -2,10 +2,11 @@
   Recipe Search System Project
   <img src="https://www.shutterstock.com/image-photo/food-cooking-background-on-white-260nw-1710363658.jpg" width="60px" style="background-image: url('https://www.shutterstock.com/image-photo/food-cooking-background-on-white-260nw-1710363658.jpg');"/>
 </h1>
-Project Description
+</br>
+<b>Project Description</b>
 The Recipe Search System is a web-based application that allows users to search for recipes and manage their personal recipe collection. The system includes the following features:
 
-Recipe Display: Users can view recipe details, preparation instructions, and follow along with the recipe steps.
+<b>Recipe Display</b>: Users can view recipe details, preparation instructions, and follow along with the recipe steps.
 Personal Area: Users have a dedicated space to save family recipes and store recipe notes.
 Recipe Preview: A detailed preview is provided for each recipe, including an image, title, preparation time, popularity, dietary information, and user interactions.
 Navigation Bar: A convenient navigation bar offers links to the main recipe page, search page, about page, and user-specific options.
