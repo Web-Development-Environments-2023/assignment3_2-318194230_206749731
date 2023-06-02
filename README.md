@@ -1,5 +1,8 @@
-<h1 align="center">
-  <img src="https://www.shutterstock.com/image-photo/food-cooking-background-on-white-260nw-1710363658.jpg" width="100px" alt="Recipe Search System Logo"/>
+<div align="center">
+  <img src="https://www.shutterstock.com/image-photo/food-cooking-background-on-white-260nw-1710363658.jpg" alt="Recipe Search System Logo" style="max-width: 100%;"/>
+</div>
+
+<h1 align="center" style="color: black; font-weight: bold;">
   Recipe Search System Project
 </h1>
 
