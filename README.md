@@ -1,7 +1,8 @@
 <h1 align="center">
-  <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D&w=1000&q=80"  alt="Recipe Search System Logo"/>
+  <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D&w=1000&q=80" alt="Recipe Search System Logo" width="200px" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" />
   Recipe Search System Project
 </h1>
+
 
 <p align="center">
   <b>Search, Discover, and Manage Your Favorite Recipes</b>
