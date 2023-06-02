@@ -640,10 +640,9 @@ components:
           example: 60
         serves:
           type: integer
-<<<<<<< HEAD
           description: number of servings the recipe makes
-=======
-          description: number of servings the recipe makes
-          example: 8
+# =======
+#           description: number of servings the recipe makes
+#           example: 8
     
->>>>>>> 08d39d39a8e883ad4681d3a28526d3bdc9e57fe8
+# >>>>>>> 08d39d39a8e883ad4681d3a28526d3bdc9e57fe8

@@ -1,10 +1,7 @@
 const axios = require("axios");
 const api_domain = "https://api.spoonacular.com/recipes";
-<<<<<<< HEAD
-let spooncular_api_key ='1f0ca9f280ad4ec0887e1958e83c934c'
-=======
-let spooncular_api_key = process.env.spooncular_api_key
->>>>>>> 08d39d39a8e883ad4681d3a28526d3bdc9e57fe8
+let spooncular_api_key = process.env.spooncular_api_key;
+
 
 
 
@@ -36,7 +33,7 @@ function getSteps(ex_list) {
     return short_list;
   }
   
-<<<<<<< HEAD
+
 
 function getIngredientsList(ex_list){
     short_list = []
@@ -75,23 +72,10 @@ async function getRecipeDetails(recipe_id, username, includeNutrition_value, sea
     return json_data
     
 }
-=======
->>>>>>> 08d39d39a8e883ad4681d3a28526d3bdc9e57fe8
-
-function getIngredientsList(ex_list){
-    short_list = []
-    ex_list.map((element) => short_list.push(element.name +' - ' + element.amount))
-    return short_list
-}
-
-<<<<<<< HEAD
-async function getRecipeDet(recipe_id) {
-=======
-async function getRecipeDetails(recipe_id, username, includeNutrition_value, search_result) {
->>>>>>> 08d39d39a8e883ad4681d3a28526d3bdc9e57fe8
+async function getRecipeDet(recipe_id, username, includeNutrition_value, search_result) {
     let recipe_info = await getRecipeInformation(recipe_id);
-    const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,instructions,extendedIngredients,servings,analyzedInstructions} = recipe_info.data;
-    let json_data =  {
+    const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree, instructions, extendedIngredients, servings, analyzedInstructions } = recipe_info.data;
+    let json_data = {
         recipe_id: id,
         title: title,
         readyInMinutes: readyInMinutes,
@@ -100,27 +84,9 @@ async function getRecipeDetails(recipe_id, username, includeNutrition_value, sea
         vegan: vegan,
         vegetarian: vegetarian,
         glutenFree: glutenFree,
-<<<<<<< HEAD
-=======
-    };
 
-    
-    if (includeNutrition_value) {
-        json_data.servings = servings
-        json_data.instructions = instructions
-        json_data.extendedIngredients = getIngredientsList(extendedIngredients)
-        return json_data
->>>>>>> 08d39d39a8e883ad4681d3a28526d3bdc9e57fe8
-    }
-    
-    if (search_result) {
-        json_data.extendedIngredients = getIngredientsList(extendedIngredients)
-        json_data.analyzedInstructions = getSteps(analyzedInstructions)
-        return json_data
-    }
-    
-    return json_data
-    
+    };
+    return json_data;
 }
 
 async function searchResultsFromApi(query_str, num_of_results, cuisine, diet, intolerances){
@@ -211,4 +177,4 @@ async function getRandomRecipes() {
 exports.getRandomRecipes = getRandomRecipes
 exports.searchRecipes = searchRecipes;
 exports.getRecipeDetails = getRecipeDetails;
-exports.getRecipeDet=getRecipeDet
+exports.getRecipeDet=getRecipeDet;
