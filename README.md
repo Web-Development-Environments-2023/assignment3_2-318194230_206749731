@@ -1,10 +1,9 @@
-<div align="center">
-  <img src="https://www.shutterstock.com/image-photo/food-cooking-background-on-white-260nw-1710363658.jpg" alt="Recipe Search System Logo" style="max-width: 100%;"/>
+<div style="position: relative; text-align: center;">
+  <img src="https://www.shutterstock.com/image-photo/food-cooking-background-on-white-260nw-1710363658.jpg" alt="Recipe Search System Background Image" style="max-width: 100%;" />
+  <h1 style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: black; font-weight: bold; font-size: 2.5rem;">
+    Recipe Search System Project
+  </h1>
 </div>
-
-<h1 align="center" style="color: black; font-weight: bold;">
-  Recipe Search System Project
-</h1>
 
 <p align="center">
   <b>Search, Discover, and Manage Your Favorite Recipes</b>
