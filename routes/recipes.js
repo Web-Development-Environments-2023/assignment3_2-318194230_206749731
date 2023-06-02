@@ -45,4 +45,8 @@ router.get("/random", async (req, res, next) => {
 
 
 
+<<<<<<< HEAD
 module.exports = router;
+=======
+module.exports = router;
+>>>>>>> 08d39d39a8e883ad4681d3a28526d3bdc9e57fe8
