@@ -1,16 +1,13 @@
-<div style="position: relative; text-align: center;">
-  <img src="https://www.shutterstock.com/image-photo/food-cooking-background-on-white-260nw-1710363658.jpg" alt="Recipe Search System Background Image" style="max-width: 100%;" />
-  <h1 style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: black; font-weight: bold; font-size: 2.5rem;">
-    Recipe Search System Project
-  </h1>
-</div>
+<h1 align="center">
+  <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D&w=1000&q=80" alt="Recipe Search System Logo"/>
+  Recipe Search System Project
+</h1>
 
 <p align="center">
   <b>Search, Discover, and Manage Your Favorite Recipes</b>
 </p>
 
 ---
-
 ## Project Description
 
 The Recipe Search System is a web-based application that allows users to search for recipes and manage their personal recipe collection. The system includes the following features:
