@@ -58,33 +58,11 @@ async function getRecipeDetails(recipe_id, username, includeNutrition_value, sea
         extendedIngredients:extendedIngredients,
 
     };
-    let json_data_search =  {
-        recipe_id: id,
-        title: title,
-        readyInMinutes: readyInMinutes,
-        image: image,
-        popularity: aggregateLikes,
-        vegan: vegan,
-        vegetarian: vegetarian,
-        glutenFree: glutenFree,
-        instructions:instructions,
-        analyzedInstructions:analyzedInstructions
-    };
-
     
-    if (includeNutrition_value) {
-        json_data_fullreview.servings = servings
-        json_data_fullreview.instructions = instructions
-        json_data_fullreview.extendedIngredients = getIngredientsList(extendedIngredients)
-        return json_data_fullreview;
-    }
-    
-    if(search_result)
-    {json_data_search.instructions = instructions
-    json_data_search.analyzedInstructions = getSteps(analyzedInstructions)
-    return json_data_search;}
-    return;
-    
+    json_data_fullreview.servings = servings
+    json_data_fullreview.instructions = instructions
+    json_data_fullreview.extendedIngredients = getIngredientsList(extendedIngredients)
+    return json_data_fullreview;
     
 }
 async function getRecipeDet(recipe_id, username, includeNutrition_value, search_result) {
@@ -139,7 +117,7 @@ async function searchRecipes(query, numberOfResults , cuisine, diet, intolerance
     
     for (let i = 0; i < data_results.length; i++) {
       const result = data_results[i];
-      const recipeDetails = await getRecipeDetails(result.id, false, true);
+      const recipeDetails = await getRecipeDet(result.id);
       results.push(recipeDetails);
     }
   
