@@ -44,7 +44,21 @@ function getIngredientsList(ex_list){
 async function getRecipeDetails(recipe_id, username, includeNutrition_value, search_result) {
     let recipe_info = await getRecipeInformation(recipe_id);
     const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,instructions,extendedIngredients,servings,analyzedInstructions} = recipe_info.data;
-    let json_data =  {
+    let json_data_fullreview =  {
+        recipe_id: id,
+        title: title,
+        readyInMinutes: readyInMinutes,
+        image: image,
+        popularity: aggregateLikes,
+        vegan: vegan,
+        vegetarian: vegetarian,
+        glutenFree: glutenFree,
+        servings:servings,
+        instructions:instructions,
+        extendedIngredients:extendedIngredients,
+
+    };
+    let json_data_search =  {
         recipe_id: id,
         title: title,
         readyInMinutes: readyInMinutes,
@@ -59,18 +73,18 @@ async function getRecipeDetails(recipe_id, username, includeNutrition_value, sea
 
     
     if (includeNutrition_value) {
-        json_data.servings = servings
-        json_data.instructions = instructions
-        return json_data
+        json_data_fullreview.servings = servings
+        json_data_fullreview.instructions = instructions
+        json_data_fullreview.extendedIngredients = getIngredientsList(extendedIngredients)
+        return json_data_fullreview;
     }
     
-    if (search_result) {
-        json_data.extendedIngredients = getIngredientsList(extendedIngredients)
-        json_data.analyzedInstructions = getSteps(analyzedInstructions)
-        return json_data
-    }
+    if(search_result)
+    {json_data_search.instructions = instructions
+    json_data_search.analyzedInstructions = getSteps(analyzedInstructions)
+    return json_data_search;}
+    return;
     
-    return json_data
     
 }
 async function getRecipeDet(recipe_id, username, includeNutrition_value, search_result) {
