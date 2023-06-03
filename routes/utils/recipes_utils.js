@@ -44,6 +44,8 @@ function getIngredientsList(ex_list){
 async function getRecipeDetails(recipe_id, username, includeNutrition_value, search_result) {
     let recipe_info = await getRecipeInformation(recipe_id);
     const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,instructions,extendedIngredients,servings,analyzedInstructions} = recipe_info.data;
+    let favorites_recipes = await user_utils.getFavoriteRecipes(username);
+    let favorite = favorites_recipes.includes(id);
     let json_data_fullreview =  {
         recipe_id: id,
         title: title,
@@ -53,6 +55,7 @@ async function getRecipeDetails(recipe_id, username, includeNutrition_value, sea
         vegan: vegan,
         vegetarian: vegetarian,
         glutenFree: glutenFree,
+        favorite:favorite,
         servings:servings,
         instructions:instructions,
         extendedIngredients:extendedIngredients,
@@ -81,9 +84,6 @@ async function getRecipeDet(recipe_id, username, includeNutrition_value, search_
         vegetarian: vegetarian,
         glutenFree: glutenFree,
         favorite:favorite,
-        
-        
-
     };
     return json_data;
 }
