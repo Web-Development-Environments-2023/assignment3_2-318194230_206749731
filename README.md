@@ -7,7 +7,7 @@
 
 <p align="center">
   <b>Search, Discover, and Manage Your Favorite Recipes</b></br>
-  318194230 Ori Fadida 206749731 Keren Gorelik
+  <b> Created By:</b> 318194230 Ori Fadida, 206749731 Keren Gorelik
 </p>
 
 ---
