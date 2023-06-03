@@ -53,6 +53,8 @@ async function getRecipeDetails(recipe_id, username, includeNutrition_value, sea
         vegan: vegan,
         vegetarian: vegetarian,
         glutenFree: glutenFree,
+        instructions:instructions,
+        analyzedInstructions:analyzedInstructions
     };
 
     
