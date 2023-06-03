@@ -25,12 +25,12 @@ function getSteps(ex_list) {
     }
   
     const steps = ex_list[0].steps;
-    if (steps == null) {
-      return null;
-    }
-  
+    if (steps !=null)
+    {
     const short_list = steps.map((element) => `${++count}. ${element.step}`);
     return short_list;
+    }
+    return null;
   }
   
 
@@ -62,12 +62,15 @@ async function getRecipeDetails(recipe_id, username, includeNutrition_value, sea
     json_data_fullreview.servings = servings
     json_data_fullreview.instructions = instructions
     json_data_fullreview.extendedIngredients = getIngredientsList(extendedIngredients)
+    json_data_fullreview.analyzedInstructions = getSteps(analyzedInstructions)
     return json_data_fullreview;
     
 }
 async function getRecipeDet(recipe_id, username, includeNutrition_value, search_result) {
     let recipe_info = await getRecipeInformation(recipe_id);
     const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree, instructions, extendedIngredients, servings, analyzedInstructions } = recipe_info.data;
+    let favorites_recipes = await user_utils.getFavoriteRecipes(username);
+    let favorite = favorites_recipes.includes(id);
     let json_data = {
         recipe_id: id,
         title: title,
@@ -77,6 +80,9 @@ async function getRecipeDet(recipe_id, username, includeNutrition_value, search_
         vegan: vegan,
         vegetarian: vegetarian,
         glutenFree: glutenFree,
+        favorite:favorite,
+        
+        
 
     };
     return json_data;
