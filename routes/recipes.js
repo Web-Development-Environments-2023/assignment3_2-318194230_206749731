@@ -5,7 +5,7 @@ const recipes_utils = require("./utils/recipes_utils");
 // This path returns a full details of a recipe by its id
 router.get("/PreReviewRecipe/:recipeId", async (req, res, next) => {
   try {
-    const recipe = await recipes_utils.getRecipeDet(recipe.recipe_id);
+    const recipe = await recipes_utils.getRecipeDet(req.params.recipeId);
     res.send(recipe);
   } catch (error) {
     next(error);
