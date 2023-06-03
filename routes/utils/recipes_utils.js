@@ -61,7 +61,6 @@ async function getRecipeDetails(recipe_id, username, includeNutrition_value, sea
     if (includeNutrition_value) {
         json_data.servings = servings
         json_data.instructions = instructions
-        json_data.extendedIngredients = getIngredientsList(extendedIngredients)
         return json_data
     }
     
