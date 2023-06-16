@@ -92,6 +92,9 @@ async function getRecipeDet(recipe_id, username, includeNutrition_value, search_
 
 async function searchResultsFromApi(query_str, num_of_results, cuisine, diet, intolerances){
     //, num_of_results, cuisine, diet, intolerances
+    if (num_of_results === undefined){
+        num_of_results = 5
+    }
     return await axios.get(`${api_domain}/complexSearch`, {
         params: {
             query: query_str,
