@@ -90,19 +90,55 @@ async function getRecipeDet(recipe_id, username, includeNutrition_value, search_
     };
     return json_data;
 }
+// async function extractFullRecipesDetails(recipes_info){ 
+//     return recipes_info.map((recipe_info) => {
+//         //check the data type so it can work with diffrent types of data
+//         let data = recipe_info;
+//         if (recipe_info.data) {
+//             data = recipe_info.data;
+//         }
+//         const {
+//             id,
+//             title,
+//             readyInMinutes,
+//             image,
+//             aggregateLikes,
+//             vegan,
+//             vegetarian,
+//             glutenFree,
+//             extendedIngredients,
+//             analyzedInstructions,
+//             servings,
+//         } = data;
+//         return {
+//             id: id,
+//             title: title,
+//             readyInMinutes: readyInMinutes,
+//             image: image,
+//             aggregateLikes: aggregateLikes,
+//             vegan: vegan,
+//             vegetarian: vegetarian,
+//             glutenFree: glutenFree,
+//             extendedIngredients: extendedIngredients, 
+//             instructions: analyzedInstructions, 
+//             servings: servings,
+//         }
+//     })
+// }
 
-async function searchResultsFromApi(query_str, num_of_results, cuisine, diet, intolerances){
+async function searchResultsFromApi(query_search){
     //, num_of_results, cuisine, diet, intolerances
-    if (num_of_results === undefined){
-        num_of_results = 5
+    if (!query_search.number) {
+        query_search.number = 5;
     }
+    
     return await axios.get(`${api_domain}/complexSearch`, {
         params: {
-            query: query_str,
-            number: num_of_results,
-            cuisine: cuisine,
-            diet: diet,
-            intolerances: intolerances,
+            query: query_search.query,
+            number: query_search.number,
+            cuisine: query_search.cuisine,
+            diet: query_search.diet,
+            intolerances: query_search.intolerances,
             apiKey:spooncular_api_key
         }
     });
@@ -110,21 +146,20 @@ async function searchResultsFromApi(query_str, num_of_results, cuisine, diet, in
 
 
 
-async function searchRecipes(query, numberOfResults , cuisine, diet, intolerances) {
-    const search_res = await searchResultsFromApi(query, numberOfResults, cuisine, diet, intolerances);
-    const data_results = search_res.data.results;
+async function searchRecipes(query) {
+    let search_pool = await searchResultsFromApi(query)
+    let filtered_search_recipes = search_pool.data.results.filter((search) => (search.instructions != "") )
+    // return extractFullRecipesDetails(filtered_search_recipes)
     const results = [];
     
-    for (let i = 0; i < data_results.length; i++) {
-      const result = data_results[i];
+    for (let i = 0; i < filtered_search_recipes.length; i++) {
+      const result = filtered_search_recipes[i];
       const recipeDetails = await getRecipeDet(result.id);
-      if(recipeDetails.analyzedInstructions.length === 0){
-        searchRecipes(query, numberOfResults , cuisine, diet, intolerances);
-      }
       results.push(recipeDetails);
     }
   
     return results;
+
   }
 async function helpRandom(){
     return await axios.get(`${api_domain}/random`, {

@@ -266,7 +266,7 @@ paths:
         "404":
           description: recipeId is not exists
 
-  /recipes/searchForRecipe/{String}:
+  /recipes/searchForRecipe:
     get:
       tags:
       - Recipes
@@ -274,15 +274,15 @@ paths:
       description: returns search result for recipe
       operationId: searchForRecipe
       parameters:
-      - name: String
-        in: path
+      - name: query
+        in: "query"
         description: pass string for looking up a recipe
         required: true
         style: simple
         explode: false
         schema:
           type: string
-      - name: numberOfresults
+      - name: number
         in: query
         description: number of records to return
         required: false
@@ -290,12 +290,12 @@ paths:
         explode: true
         schema:
           type: integer
-          format: int32
-          default: 5
+          
           enum:
           - 5
           - 10
           - 15
+          default: 5
       - name: cuisine
         in: query
         description: type of cuisine

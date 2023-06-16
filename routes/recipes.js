@@ -21,13 +21,9 @@ router.get("/PreReviewRecipe/:recipeId", async (req, res, next) => {
   }
 });
 
-router.get("/searchForRecipe/:query", async (req, res, next) => {
+router.get("/searchForRecipe", async (req, res, next) => {
   try {
-    query = req.params.query
-    const { numberOfResults, cuisine, diet, intolerances } = req.query;
-    console.log(numberOfResults)
-
-    const recipes = await recipes_utils.searchRecipes(query, numberOfResults, cuisine, diet, intolerances);
+    const recipes = await recipes_utils.searchRecipes(req.query);
     res.send(recipes);
   } catch (error) {
     next(error);
