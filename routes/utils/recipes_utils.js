@@ -71,7 +71,7 @@ async function getRecipeDetails(recipe_id, username, includeNutrition_value, sea
     return json_data_fullreview;
     
 }
-async function getRecipeDet(recipe_id, username, includeNutrition_value, search_result) {
+async function getRecipeDet(recipe_id, username) {
     let recipe_info = await getRecipeInformation(recipe_id);
     const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree, instructions, extendedIngredients, servings, analyzedInstructions } = recipe_info.data;
     let favorites_recipes = await user_utils.getFavoriteRecipes(username);
@@ -112,7 +112,7 @@ async function searchResultsFromApi(query_search){
 
 async function searchRecipes(query) {
     let search_pool = await searchResultsFromApi(query)
-    let filtered_search_recipes = search_pool.data.results.filter((search) => (search.instructions != "") )
+    let filtered_search_recipes = search_pool.data.results.filter((search) => (search.instructions != "")&& (search.image) )
     const results = [];
     
     for (let i = 0; i < filtered_search_recipes.length; i++) {
