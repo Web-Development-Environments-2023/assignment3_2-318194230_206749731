@@ -291,6 +291,7 @@ paths:
         schema:
           type: integer
           format: int32
+          default: 5
           enum:
           - 5
           - 10

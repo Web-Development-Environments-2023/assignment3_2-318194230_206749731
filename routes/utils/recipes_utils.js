@@ -86,6 +86,7 @@ async function getRecipeDet(recipe_id, username, includeNutrition_value, search_
         vegetarian: vegetarian,
         glutenFree: glutenFree,
         favorite:favorite,
+        analyzedInstructions: getSteps(analyzedInstructions),
     };
     return json_data;
 }
@@ -106,19 +107,7 @@ async function searchResultsFromApi(query_str, num_of_results, cuisine, diet, in
         }
     });
 }
-async function searchResultsFromApi(query_str, num_of_results, cuisine, diet, intolerances){
-    //, num_of_results, cuisine, diet, intolerances
-    return await axios.get(`${api_domain}/complexSearch`, {
-        params: {
-            query: query_str,
-            number: num_of_results,
-            cuisine: cuisine,
-            diet: diet,
-            intolerances: intolerances,
-            apiKey:spooncular_api_key
-        }
-    });
-}
+
 
 
 async function searchRecipes(query, numberOfResults , cuisine, diet, intolerances) {
@@ -129,6 +118,9 @@ async function searchRecipes(query, numberOfResults , cuisine, diet, intolerance
     for (let i = 0; i < data_results.length; i++) {
       const result = data_results[i];
       const recipeDetails = await getRecipeDet(result.id);
+      if(recipeDetails.analyzedInstructions.length === 0){
+        searchRecipes(query, numberOfResults , cuisine, diet, intolerances);
+      }
       results.push(recipeDetails);
     }
   

@@ -25,6 +25,8 @@ router.get("/searchForRecipe/:query", async (req, res, next) => {
   try {
     query = req.params.query
     const { numberOfResults, cuisine, diet, intolerances } = req.query;
+    console.log(numberOfResults)
+
     const recipes = await recipes_utils.searchRecipes(query, numberOfResults, cuisine, diet, intolerances);
     res.send(recipes);
   } catch (error) {
