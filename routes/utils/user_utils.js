@@ -32,7 +32,20 @@ async function getRecipeDetailsfromDBfamilyrecipes(username) {
         throw new Error("Failed to retrieve recipes for the specified username.");
     }
 }
-
+async function getRecipeDetailsfromDBlastseenrecipes(username) {
+    try {
+        const query = `
+            SELECT recipe_id
+            FROM 3lastseenrecipes
+            WHERE username = '${username}'
+            ORDER BY date DESC
+        `;
+        const result = await DButils.execQuery(query);
+        return result;
+    } catch (error) {
+        throw new Error("Failed to retrieve last seen recipes for the specified username.");
+    }
+}
 // Retrieves the last seen recipe details from the "3lastseenrecipes" table in the database for a given user
 async function getRecipeDetailsfromDB3lastseenrecipes(username) {
     try {
@@ -102,3 +115,4 @@ exports.getRecipeDetailsfromDBfamilyrecipes = getRecipeDetailsfromDBfamilyrecipe
 exports.getRecipeDetailsfromDB3lastseenrecipes = getRecipeDetailsfromDB3lastseenrecipes;
 exports.insertRecipeToMyRecipes = insertRecipeToMyRecipes;
 exports.insertRecipeTofamilyrecipes = insertRecipeTofamilyrecipes;
+exports.getRecipeDetailsfromDBlastseenrecipes = getRecipeDetailsfromDBlastseenrecipes;

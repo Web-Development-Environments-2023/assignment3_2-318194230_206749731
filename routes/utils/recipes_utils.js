@@ -45,8 +45,8 @@ function getIngredientsList(ex_list){
 async function getRecipeDetails(recipe_id, username, includeNutrition_value, search_result) {
     let recipe_info = await getRecipeInformation(recipe_id);
     const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,instructions,extendedIngredients,servings,analyzedInstructions} = recipe_info.data;
-    // let favorites_recipes = await user_utils.getFavoriteRecipes(username);
-    // let favorite = favorites_recipes.includes(id);
+    let favorites_recipes = await user_utils.getFavoriteRecipes(username);
+    let favorite = favorites_recipes.includes(id);
     
     let json_data_fullreview =  {
         recipe_id: id,
@@ -57,7 +57,7 @@ async function getRecipeDetails(recipe_id, username, includeNutrition_value, sea
         vegan: vegan,
         vegetarian: vegetarian,
         glutenFree: glutenFree,
-        // favorite:favorite,
+        favorite:favorite,
         servings:servings,
         instructions:instructions,
         extendedIngredients:extendedIngredients,
@@ -76,6 +76,8 @@ async function getRecipeDet(recipe_id, username) {
     const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree, instructions, extendedIngredients, servings, analyzedInstructions } = recipe_info.data;
     let favorites_recipes = await user_utils.getFavoriteRecipes(username);
     let favorite = favorites_recipes.includes(id);
+    let seen_recipes_list  =  await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
+    let seen_recipes = seen_recipes_list.includes(id);
     let json_data = {
         recipe_id: id,
         title: title,
@@ -86,6 +88,7 @@ async function getRecipeDet(recipe_id, username) {
         vegetarian: vegetarian,
         glutenFree: glutenFree,
         favorite:favorite,
+        seen:seen_recipes,
         analyzedInstructions: getSteps(analyzedInstructions),
     };
     return json_data;
@@ -112,7 +115,7 @@ async function searchResultsFromApi(query_search){
 
 async function searchRecipes(query) {
     let search_pool = await searchResultsFromApi(query)
-    let filtered_search_recipes = search_pool.data.results.filter((search) => (search.instructions != "")&& (search.image) )
+    let filtered_search_recipes = search_pool.data.results.filter((search) => (search.instructions != "")&& (search.image !== undefined) )
     const results = [];
     
     for (let i = 0; i < filtered_search_recipes.length; i++) {
