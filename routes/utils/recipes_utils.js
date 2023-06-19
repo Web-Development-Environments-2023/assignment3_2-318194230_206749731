@@ -42,11 +42,10 @@ function getIngredientsList(ex_list){
     return short_list
 }
 
-async function getRecipeDetails(recipe_id, username, includeNutrition_value, search_result) {
+async function getRecipeDetails(recipes_id,recipe_id, username) {
     let recipe_info = await getRecipeInformation(recipe_id);
     const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,instructions,extendedIngredients,servings,analyzedInstructions} = recipe_info.data;
-    let favorites_recipes = await user_utils.getFavoriteRecipes(username);
-    let favorite = favorites_recipes.includes(id);
+    let favorite = recipes_id.includes(recipe_id);
     let seen_recipes_list  =  await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
     let seen_recipes = seen_recipes_list.includes(id);
 
@@ -74,11 +73,10 @@ async function getRecipeDetails(recipe_id, username, includeNutrition_value, sea
     return json_data_fullreview;
     
 }
-async function getRecipeDet(recipe_id, username) {
+async function getRecipeDet(recipes_id,recipe_id, username) {
     let recipe_info = await getRecipeInformation(recipe_id);
     const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree, instructions, extendedIngredients, servings, analyzedInstructions } = recipe_info.data;
-    let favorites_recipes = await user_utils.getFavoriteRecipes(username);
-    let favorite = favorites_recipes.includes(id);
+    let favorite = recipes_id.includes(recipe_id);
     let seen_recipes_list  =  await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
     let seen_recipes = seen_recipes_list.includes(id);
     let json_data = {
@@ -157,7 +155,7 @@ async function getRandomRecipes() {
             vegetarian,
             vegan,
             glutenFree,
-            image
+            image,
         } = result;
         return {
             recipe_id: id,
