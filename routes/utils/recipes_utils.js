@@ -45,9 +45,19 @@ function getIngredientsList(ex_list){
 async function getRecipeDetails(recipes_id,recipe_id, username) {
     let recipe_info = await getRecipeInformation(recipe_id);
     const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,instructions,extendedIngredients,servings,analyzedInstructions} = recipe_info.data;
-    let favorite = recipes_id.includes(recipe_id);
+    let favorite = false;
+    let seen = false;
+    for (const recipe of recipes_id){
+        if (recipe.recipe_id === recipe_id){
+            favorite = true;
+        }
+    }
     let seen_recipes_list  =  await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
-    let seen_recipes = seen_recipes_list.includes(id);
+    for (const recipe of seen_recipes_list){
+        if (recipe.recipe_id === recipe_id){
+            seen = true;
+        }
+    }
 
     let json_data_fullreview =  {
         recipe_id: id,
@@ -59,7 +69,7 @@ async function getRecipeDetails(recipes_id,recipe_id, username) {
         vegetarian: vegetarian,
         glutenFree: glutenFree,
         favorite:favorite,
-        seen:seen_recipes,
+        seen:seen,
         servings:servings,
         instructions:instructions,
         extendedIngredients:extendedIngredients,
@@ -75,10 +85,20 @@ async function getRecipeDetails(recipes_id,recipe_id, username) {
 }
 async function getRecipeDet(recipes_id,recipe_id, username) {
     let recipe_info = await getRecipeInformation(recipe_id);
+    let favorite = false;
+    let seen = false;
     const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree, instructions, extendedIngredients, servings, analyzedInstructions } = recipe_info.data;
-    let favorite = recipes_id.includes(recipe_id);
+    for (const recipe of recipes_id){
+        if (recipe.recipe_id === recipe_id){
+            favorite = true;
+        }
+    }
     let seen_recipes_list  =  await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
-    let seen_recipes = seen_recipes_list.includes(id);
+    for (const recipe of seen_recipes_list){
+        if (recipe.recipe_id === recipe_id){
+            seen = true;
+        }
+    }
     let json_data = {
         recipe_id: id,
         title: title,
@@ -89,7 +109,7 @@ async function getRecipeDet(recipes_id,recipe_id, username) {
         vegetarian: vegetarian,
         glutenFree: glutenFree,
         favorite:favorite,
-        seen:seen_recipes,
+        seen:seen,
         analyzedInstructions: getSteps(analyzedInstructions),
     };
     return json_data;
