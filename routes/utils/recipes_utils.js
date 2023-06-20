@@ -1,7 +1,10 @@
 const axios = require("axios");
 const api_domain = "https://api.spoonacular.com/recipes";
 let spooncular_api_key = process.env.spooncular_api_key;
+<<<<<<< HEAD
 const user_utils = require('./user_utils');
+=======
+>>>>>>> 9c226d25ebe8ebf3b94156e72ef3690fb5fb2f3f
 
 
 
@@ -26,12 +29,21 @@ function getSteps(ex_list) {
     }
   
     const steps = ex_list[0].steps;
+<<<<<<< HEAD
     if (steps !=null)
     {
     const short_list = steps.map((element) => `${++count}. ${element.step}`);
     return short_list;
     }
     return null;
+=======
+    if (steps == null) {
+      return null;
+    }
+  
+    const short_list = steps.map((element) => `${++count}. ${element.step}`);
+    return short_list;
+>>>>>>> 9c226d25ebe8ebf3b94156e72ef3690fb5fb2f3f
   }
   
 
@@ -45,10 +57,14 @@ function getIngredientsList(ex_list){
 async function getRecipeDetails(recipe_id, username, includeNutrition_value, search_result) {
     let recipe_info = await getRecipeInformation(recipe_id);
     const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,instructions,extendedIngredients,servings,analyzedInstructions} = recipe_info.data;
+<<<<<<< HEAD
     let favorites_recipes = await user_utils.getFavoriteRecipes(username);
     let favorite = favorites_recipes.includes(id);
     
     let json_data_fullreview =  {
+=======
+    let json_data =  {
+>>>>>>> 9c226d25ebe8ebf3b94156e72ef3690fb5fb2f3f
         recipe_id: id,
         title: title,
         readyInMinutes: readyInMinutes,
@@ -57,6 +73,7 @@ async function getRecipeDetails(recipe_id, username, includeNutrition_value, sea
         vegan: vegan,
         vegetarian: vegetarian,
         glutenFree: glutenFree,
+<<<<<<< HEAD
         favorite:favorite,
         servings:servings,
         instructions:instructions,
@@ -106,13 +123,101 @@ async function searchResultsFromApi(query_search){
             cuisine: query_search.cuisine,
             diet: query_search.diet,
             intolerances: query_search.intolerances,
+=======
+    };
+
+    
+    if (includeNutrition_value) {
+        json_data.servings = servings
+        json_data.instructions = instructions
+        json_data.extendedIngredients = getIngredientsList(extendedIngredients)
+        return json_data
+    }
+    
+    if (search_result) {
+        json_data.extendedIngredients = getIngredientsList(extendedIngredients)
+        json_data.analyzedInstructions = getSteps(analyzedInstructions)
+        return json_data
+    }
+    
+    return json_data
+    
+}
+async function getRecipeDet(recipe_id, username, includeNutrition_value, search_result) {
+    let recipe_info = await getRecipeInformation(recipe_id);
+    const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree, instructions, extendedIngredients, servings, analyzedInstructions } = recipe_info.data;
+    let json_data = {
+        recipe_id: id,
+        title: title,
+        readyInMinutes: readyInMinutes,
+        image: image,
+        popularity: aggregateLikes,
+        vegan: vegan,
+        vegetarian: vegetarian,
+        glutenFree: glutenFree,
+
+    };
+    return json_data;
+}
+
+async function searchResultsFromApi(query_str, num_of_results, cuisine, diet, intolerances){
+    //, num_of_results, cuisine, diet, intolerances
+    return await axios.get(`${api_domain}/complexSearch`, {
+        params: {
+            query: query_str,
+            number: num_of_results,
+            cuisine: cuisine,
+            diet: diet,
+            intolerances: intolerances,
+            apiKey:spooncular_api_key
+        }
+    });
+}
+async function searchResultsFromApi(query_str, num_of_results, cuisine, diet, intolerances){
+    //, num_of_results, cuisine, diet, intolerances
+    return await axios.get(`${api_domain}/complexSearch`, {
+        params: {
+            query: query_str,
+            number: num_of_results,
+            cuisine: cuisine,
+            diet: diet,
+            intolerances: intolerances,
+>>>>>>> 9c226d25ebe8ebf3b94156e72ef3690fb5fb2f3f
             apiKey:spooncular_api_key
         }
     });
 }
 
 
+async function searchRecipes(query, numberOfResults , cuisine, diet, intolerances) {
+    const search_res = await searchResultsFromApi(query, numberOfResults, cuisine, diet, intolerances);
+    const data_results = search_res.data.results;
+    const results = [];
+    
+    for (let i = 0; i < data_results.length; i++) {
+      const result = data_results[i];
+      const recipeDetails = await getRecipeDetails(result.id, false, true);
+      results.push(recipeDetails);
+    }
+  
+    return results;
+  }
+async function helpRandom(){
+    return await axios.get(`${api_domain}/random`, {
+        params: {
+            number: 1,
+            apiKey:spooncular_api_key
+        }
+    });
+}
+async function getRandomRecipes() {
+    let array = [];
+    for (let i = 0; i < 3; i++) {
+        let search_response = await helpRandom();
+        while(!search_response.data.recipes[0].instructions){
+            search_response = await helpRandom();
 
+<<<<<<< HEAD
 async function searchRecipes(query) {
     let search_pool = await searchResultsFromApi(query)
     let filtered_search_recipes = search_pool.data.results.filter((search) => (search.instructions != "")&& (search.image !== undefined) )
@@ -142,6 +247,8 @@ async function getRandomRecipes() {
         while(!search_response.data.recipes[0].instructions){
             search_response = await helpRandom();
 
+=======
+>>>>>>> 9c226d25ebe8ebf3b94156e72ef3690fb5fb2f3f
         }
         array.push(search_response.data.recipes[0])
     }
