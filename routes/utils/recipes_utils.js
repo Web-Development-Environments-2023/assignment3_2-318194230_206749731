@@ -42,23 +42,22 @@ function getIngredientsList(ex_list){
     return short_list
 }
 
-async function getRecipeDetails(recipes_id,recipe_id, username) {
+async function getRecipeDetails(recipe_id, username, includeNutrition_value, search_result) {
     let recipe_info = await getRecipeInformation(recipe_id);
     const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,instructions,extendedIngredients,servings,analyzedInstructions} = recipe_info.data;
     let favorite = false;
     let seen = false;
-    for (const recipe of recipes_id){
-        if (recipe.recipe_id === recipe_id){
+    let favorites_recipes = await user_utils.getFavoriteRecipes(username);
+    for(const recipe in favorites_recipes){
+        if(recipe.recipe_id ===recipe_id )
             favorite = true;
-        }
     }
     let seen_recipes_list  =  await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
-    for (const recipe of seen_recipes_list){
-        if (recipe.recipe_id === recipe_id){
+    for(const recipe in seen_recipes_list){
+        if(recipe.recipe_id ===recipe_id )
             seen = true;
-        }
     }
-
+    
     let json_data_fullreview =  {
         recipe_id: id,
         title: title,
@@ -83,21 +82,24 @@ async function getRecipeDetails(recipes_id,recipe_id, username) {
     return json_data_fullreview;
     
 }
-async function getRecipeDet(recipes_id,recipe_id, username) {
+async function getRecipeDet(recipes,recipes_id,recipe_id,path) {
     let recipe_info = await getRecipeInformation(recipe_id);
+    const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree, instructions, extendedIngredients, servings, analyzedInstructions } = recipe_info.data;
     let favorite = false;
     let seen = false;
-    const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree, instructions, extendedIngredients, servings, analyzedInstructions } = recipe_info.data;
-    for (const recipe of recipes_id){
-        if (recipe.recipe_id === recipe_id){
+    for(const recipe in recipes_id){
+        if(recipe.recipe_id === recipe_id )
             favorite = true;
-        }
     }
-    let seen_recipes_list  =  await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
-    for (const recipe of seen_recipes_list){
-        if (recipe.recipe_id === recipe_id){
+    for(const r in recipes){
+        if(r.recipe_id === recipe_id )
             seen = true;
-        }
+    }
+    if(path === "favorite"){
+        favorite = true;
+    }
+    else if(path === "seen"){
+        seen = true;
     }
     let json_data = {
         recipe_id: id,
@@ -134,14 +136,16 @@ async function searchResultsFromApi(query_search){
 
 
 
-async function searchRecipes(query) {
+async function searchRecipes(query,username) {
     let search_pool = await searchResultsFromApi(query)
     let filtered_search_recipes = search_pool.data.results.filter((search) => (search.instructions != "")&& (search.image !== undefined) )
     const results = [];
     
     for (let i = 0; i < filtered_search_recipes.length; i++) {
       const result = filtered_search_recipes[i];
-      const recipeDetails = await getRecipeDet(result.id);
+      const recipes_id = await user_utils.getFavoriteRecipes(username);
+      let recipes = await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
+      const recipeDetails = await getRecipeDet(recipes,recipes_id,result.id);
       results.push(recipeDetails);
     }
   
@@ -175,7 +179,7 @@ async function getRandomRecipes() {
             vegetarian,
             vegan,
             glutenFree,
-            image,
+            image
         } = result;
         return {
             recipe_id: id,

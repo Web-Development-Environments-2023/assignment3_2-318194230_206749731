@@ -54,15 +54,15 @@ router.get('/favorites', async (req, res, next) => {
     const username = req.session.username;
 
     // Create an object to store the favorite recipes
-    const favorite_recipes = {};
-
+    const results = [];
     // Retrieve the recipes IDs of the user's favorite recipes
     const recipes_id = await user_utils.getFavoriteRecipes(username);
 
     // Iterate over the recipes IDs and fetch their details using recipe_utils
-    const results = [];
+    
+    let recipes = await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
     for (const recipe of recipes_id) {
-      const recipeDetails = await recipe_utils.getRecipeDet(recipes_id,recipe.recipe_id,username);
+      const recipeDetails = await recipe_utils.getRecipeDet(recipes,recipes_id,recipe.recipe_id,"favorite");
       results.push(recipeDetails);
     }
 
@@ -175,7 +175,7 @@ router.post("/LastViewed", async (req, res, next) => {
     // Send a 201 response with a success message
     res.status(201).send({ message: "Recipe added", success: true });
   } catch (error) {
-    // Send a 400 response with the error message  
+    // Send a 400 response with the error message
     res.status(400).send({ message: error.message, success: false });
   }
 });
@@ -189,11 +189,15 @@ router.get('/LastViewed', async (req, res, next) => {
     let recipes = await user_utils.getRecipeDetailsfromDB3lastseenrecipes(username);
     const results = [];
     const recipes_id = await user_utils.getFavoriteRecipes(username);
+
+    // Iterate over the recipes IDs and fetch their details using recipe_utils
+    
+    let recipes_seen = await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
     // Iterate over the retrieved recipes
     for (const recipe of recipes) {
       console.log(recipe);
       // Call recipe_utils function to get the detailed information of each recipe
-      const recipeDetails = await recipe_utils.getRecipeDet(recipes_id,recipe.recipe_id,username);
+      const recipeDetails = await recipe_utils.getRecipeDet(recipes_seen,recipes_id,recipe.recipe_id,"seen");
       results.push(recipeDetails);
     }
 
@@ -214,8 +218,7 @@ async function checkAndInsertEntry(username, recipeId) {
 
   if (existingEntry.length > 0) {
     // If an entry already exists, throw an error
-    const deleteQuery = `DELETE FROM 3lastseenrecipes WHERE username = '${username}' AND recipe_id = ${recipeId}`;
-    await DButils.execQuery(deleteQuery);
+    throw new Error("Entry already exists");
   }
 
   // Get the current time and format it
