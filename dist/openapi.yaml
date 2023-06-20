@@ -266,11 +266,7 @@ paths:
         "404":
           description: recipeId is not exists
 
-<<<<<<< HEAD
   /recipes/searchForRecipe:
-=======
-  /recipes/searchForRecipe/{String}:
->>>>>>> 9c226d25ebe8ebf3b94156e72ef3690fb5fb2f3f
     get:
       tags:
       - Recipes
@@ -278,24 +274,15 @@ paths:
       description: returns search result for recipe
       operationId: searchForRecipe
       parameters:
-<<<<<<< HEAD
       - name: query
         in: "query"
-=======
-      - name: String
-        in: path
->>>>>>> 9c226d25ebe8ebf3b94156e72ef3690fb5fb2f3f
         description: pass string for looking up a recipe
         required: true
         style: simple
         explode: false
         schema:
           type: string
-<<<<<<< HEAD
       - name: number
-=======
-      - name: numberOfresults
->>>>>>> 9c226d25ebe8ebf3b94156e72ef3690fb5fb2f3f
         in: query
         description: number of records to return
         required: false
@@ -303,20 +290,12 @@ paths:
         explode: true
         schema:
           type: integer
-<<<<<<< HEAD
           
-=======
-          format: int32
-          default: 5
->>>>>>> 9c226d25ebe8ebf3b94156e72ef3690fb5fb2f3f
           enum:
           - 5
           - 10
           - 15
-<<<<<<< HEAD
           default: 5
-=======
->>>>>>> 9c226d25ebe8ebf3b94156e72ef3690fb5fb2f3f
       - name: cuisine
         in: query
         description: type of cuisine
@@ -666,8 +645,4 @@ components:
 #           description: number of servings the recipe makes
 #           example: 8
     
-<<<<<<< HEAD
 # >>>>>>> 08d39d39a8e883ad4681d3a28526d3bdc9e57fe8
-=======
-# >>>>>>> 08d39d39a8e883ad4681d3a28526d3bdc9e57fe8
->>>>>>> 9c226d25ebe8ebf3b94156e72ef3690fb5fb2f3f

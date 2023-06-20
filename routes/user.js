@@ -54,15 +54,15 @@ router.get('/favorites', async (req, res, next) => {
     const username = req.session.username;
 
     // Create an object to store the favorite recipes
-    const favorite_recipes = {};
-
+    const results = [];
     // Retrieve the recipes IDs of the user's favorite recipes
     const recipes_id = await user_utils.getFavoriteRecipes(username);
 
     // Iterate over the recipes IDs and fetch their details using recipe_utils
-    const results = [];
+    
+    let recipes = await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
     for (const recipe of recipes_id) {
-      const recipeDetails = await recipe_utils.getRecipeDet(recipe.recipe_id);
+      const recipeDetails = await recipe_utils.getRecipeDet(recipes,recipes_id,recipe.recipe_id,"favorite");
       results.push(recipeDetails);
     }
 
@@ -188,12 +188,16 @@ router.get('/LastViewed', async (req, res, next) => {
     // Call user_utils function to retrieve the last viewed recipes of the user
     let recipes = await user_utils.getRecipeDetailsfromDB3lastseenrecipes(username);
     const results = [];
+    const recipes_id = await user_utils.getFavoriteRecipes(username);
 
+    // Iterate over the recipes IDs and fetch their details using recipe_utils
+    
+    let recipes_seen = await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
     // Iterate over the retrieved recipes
     for (const recipe of recipes) {
       console.log(recipe);
       // Call recipe_utils function to get the detailed information of each recipe
-      const recipeDetails = await recipe_utils.getRecipeDet(recipe.recipe_id);
+      const recipeDetails = await recipe_utils.getRecipeDet(recipes_seen,recipes_id,recipe.recipe_id,"seen");
       results.push(recipeDetails);
     }
 
@@ -214,7 +218,10 @@ async function checkAndInsertEntry(username, recipeId) {
 
   if (existingEntry.length > 0) {
     // If an entry already exists, throw an error
-    throw new Error("Entry already exists");
+    const existingEntry = await DButils.execQuery(
+      `DELETE FROM 3lastseenrecipes
+      WHERE username = '${username}' AND recipe_id = ${recipeId};`
+    );
   }
 
   // Get the current time and format it

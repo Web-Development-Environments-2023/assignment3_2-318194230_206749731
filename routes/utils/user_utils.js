@@ -115,7 +115,4 @@ exports.getRecipeDetailsfromDBfamilyrecipes = getRecipeDetailsfromDBfamilyrecipe
 exports.getRecipeDetailsfromDB3lastseenrecipes = getRecipeDetailsfromDB3lastseenrecipes;
 exports.insertRecipeToMyRecipes = insertRecipeToMyRecipes;
 exports.insertRecipeTofamilyrecipes = insertRecipeTofamilyrecipes;
-<<<<<<< HEAD
 exports.getRecipeDetailsfromDBlastseenrecipes = getRecipeDetailsfromDBlastseenrecipes;
-=======
->>>>>>> 9c226d25ebe8ebf3b94156e72ef3690fb5fb2f3f
