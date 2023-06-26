@@ -218,7 +218,9 @@ async function checkAndInsertEntry(username, recipeId) {
 
   if (existingEntry.length > 0) {
     // If an entry already exists, throw an error
-    throw new Error("Entry already exists");
+    const existingEntry = await DButils.execQuery(
+      `DELETE FROM 3lastseenrecipes WHERE username = '${username}' AND recipe_id = ${recipeId}`
+      );
   }
 
   // Get the current time and format it

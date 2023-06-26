@@ -112,7 +112,11 @@ async function getRecipeDet(recipes,recipes_id,recipe_id,path) {
         glutenFree: glutenFree,
         favorite:favorite,
         seen:seen,
+        servings:servings,
+        extendedIngredients: getIngredientsList(extendedIngredients),
+        instructions:instructions,
         analyzedInstructions: getSteps(analyzedInstructions),
+        
     };
     return json_data;
 }
