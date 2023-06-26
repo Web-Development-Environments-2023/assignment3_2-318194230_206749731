@@ -5,7 +5,6 @@ const user_utils = require('./user_utils');
 
 
 
-
 /**
  * Get recipes list from spooncular response and extract the relevant recipe data for preview
  * @param {*} recipes_info 
@@ -42,19 +41,17 @@ function getIngredientsList(ex_list){
     return short_list
 }
 
-async function getRecipeDetails(recipe_id, username, includeNutrition_value, search_result) {
+async function getRecipeDetails(recipes,recipes_id,recipe_id) {
     let recipe_info = await getRecipeInformation(recipe_id);
     const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,instructions,extendedIngredients,servings,analyzedInstructions} = recipe_info.data;
     let favorite = false;
     let seen = false;
-    let favorites_recipes = await user_utils.getFavoriteRecipes(username);
-    for(const recipe in favorites_recipes){
-        if(recipe.recipe_id ===recipe_id )
+    for(const recipe in recipes_id){
+        if(recipe.recipe_id === recipe_id )
             favorite = true;
     }
-    let seen_recipes_list  =  await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
-    for(const recipe in seen_recipes_list){
-        if(recipe.recipe_id ===recipe_id )
+    for(const r in recipes){
+        if(r.recipe_id === recipe_id )
             seen = true;
     }
     
@@ -70,15 +67,13 @@ async function getRecipeDetails(recipe_id, username, includeNutrition_value, sea
         favorite:favorite,
         seen:seen,
         servings:servings,
-        instructions:instructions,
-        extendedIngredients:extendedIngredients,
+        analyzedInstructions: getSteps(analyzedInstructions),
+        extendedIngredients: getIngredientsList(extendedIngredients),
+
+
 
     };
     
-    json_data_fullreview.servings = servings
-    json_data_fullreview.instructions = instructions
-    json_data_fullreview.extendedIngredients = getIngredientsList(extendedIngredients)
-    json_data_fullreview.analyzedInstructions = getSteps(analyzedInstructions)
     return json_data_fullreview;
     
 }
@@ -112,10 +107,7 @@ async function getRecipeDet(recipes,recipes_id,recipe_id,path) {
         glutenFree: glutenFree,
         favorite:favorite,
         seen:seen,
-        servings:servings,
-        extendedIngredients: getIngredientsList(extendedIngredients),
-        instructions:instructions,
-        analyzedInstructions: getSteps(analyzedInstructions),
+
         
     };
     return json_data;

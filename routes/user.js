@@ -38,7 +38,8 @@ router.post('/favorites', async (req, res, next) => {
 
     // Call the user_utils function to mark the recipe as a favorite for the user
     await user_utils.markAsFavorite(username, recipe_id);
-
+    
+    
     // Send a 200 response with a success message
     res.status(200).send("The Recipe successfully saved as favorite");
   } catch (error) {
@@ -57,7 +58,7 @@ router.get('/favorites', async (req, res, next) => {
     const results = [];
     // Retrieve the recipes IDs of the user's favorite recipes
     const recipes_id = await user_utils.getFavoriteRecipes(username);
-
+    
     // Iterate over the recipes IDs and fetch their details using recipe_utils
     
     let recipes = await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);

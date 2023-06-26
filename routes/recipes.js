@@ -10,7 +10,18 @@ router.get("/PreReviewRecipe/:recipeId", async (req, res, next) => {
     const username = req.session.username;
     const recipes_id = await user_utils.getFavoriteRecipes(username);
     let recipes = await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
+    
     const recipe = await recipes_utils.getRecipeDet(recipes,recipes_id,req.params.recipeId);
+    for (const rec in recipes_id)
+    {
+      if(rec.recipe_id === recipe.recipe_id)
+      recipe.favorite = true;
+    }
+    for (const recseen in recipes)
+    {
+      if(recseen.recipe_id === recipe.recipe_id)
+      recipe.seen = true;
+    }
     res.send(recipe);
   } catch (error) {
     next(error);
@@ -22,7 +33,7 @@ router.get("/PreReviewRecipe/:recipeId", async (req, res, next) => {
     const username = req.session.username;
     const recipes_id = await user_utils.getFavoriteRecipes(username);
     let recipes = await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
-    const recipe = await recipes_utils.getRecipeDet(recipes,recipes_id,req.params.recipeId);
+    const recipe = await recipes_utils.getRecipeDetails(recipes,recipes_id,req.params.recipeId);
     res.send(recipe);
   } catch (error) {
     next(error);
