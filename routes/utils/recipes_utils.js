@@ -41,19 +41,12 @@ function getIngredientsList(ex_list){
     return short_list
 }
 
-async function getRecipeDetails(recipes,recipes_id,recipe_id) {
+async function getRecipeDetails(recipe_id) {
     let recipe_info = await getRecipeInformation(recipe_id);
     const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,instructions,extendedIngredients,servings,analyzedInstructions} = recipe_info.data;
     let favorite = false;
     let seen = false;
-    for(const recipe in recipes_id){
-        if(recipe.recipe_id === recipe_id )
-            favorite = true;
-    }
-    for(const r in recipes){
-        if(r.recipe_id === recipe_id )
-            seen = true;
-    }
+    
     
     let json_data_fullreview =  {
         recipe_id: id,
@@ -77,25 +70,12 @@ async function getRecipeDetails(recipes,recipes_id,recipe_id) {
     return json_data_fullreview;
     
 }
-async function getRecipeDet(recipes,recipes_id,recipe_id,path) {
+async function getRecipeDet(recipe_id,seen,favorite) {
     let recipe_info = await getRecipeInformation(recipe_id);
     const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree, instructions, extendedIngredients, servings, analyzedInstructions } = recipe_info.data;
-    let favorite = false;
-    let seen = false;
-    for(const recipe in recipes_id){
-        if(recipe.recipe_id === recipe_id )
-            favorite = true;
-    }
-    for(const r in recipes){
-        if(r.recipe_id === recipe_id )
-            seen = true;
-    }
-    if(path === "favorite"){
-        favorite = true;
-    }
-    else if(path === "seen"){
-        seen = true;
-    }
+    
+    
+   
     let json_data = {
         recipe_id: id,
         title: title,
@@ -139,9 +119,11 @@ async function searchRecipes(query,username) {
     
     for (let i = 0; i < filtered_search_recipes.length; i++) {
       const result = filtered_search_recipes[i];
-      const recipes_id = await user_utils.getFavoriteRecipes(username);
-      let recipes = await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
-      const recipeDetails = await getRecipeDet(recipes,recipes_id,result.id);
+      const favorite = await user_utils.getFavoriteRecipes(username,result.id);
+      let seen = await user_utils.getRecipeDetailsfromDBlastseenrecipes(username,result.id);
+      const recipeDetails = await getRecipeDet(result.id);
+      recipeDetails.favorite = favorite;
+      recipeDetails.seen = seen;
       results.push(recipeDetails);
     }
   

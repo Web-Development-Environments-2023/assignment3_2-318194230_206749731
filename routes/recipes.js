@@ -8,20 +8,11 @@ const user_utils = require("./utils/user_utils");
 router.get("/PreReviewRecipe/:recipeId", async (req, res, next) => {
   try {
     const username = req.session.username;
-    const recipes_id = await user_utils.getFavoriteRecipes(username);
-    let recipes = await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
-    
-    const recipe = await recipes_utils.getRecipeDet(recipes,recipes_id,req.params.recipeId);
-    for (const rec in recipes_id)
-    {
-      if(rec.recipe_id === recipe.recipe_id)
-      recipe.favorite = true;
-    }
-    for (const recseen in recipes)
-    {
-      if(recseen.recipe_id === recipe.recipe_id)
-      recipe.seen = true;
-    }
+    const favorite = await user_utils.getFavoriteRecipes(username,req.params.recipeId);
+    let seen = await user_utils.getRecipeDetailsfromDBlastseenrecipes(username,req.params.recipeId);
+    const recipe = await recipes_utils.getRecipeDet(req.params.recipeId);
+    recipe.favorite = favorite;
+    recipe.seen = seen;
     res.send(recipe);
   } catch (error) {
     next(error);
@@ -31,9 +22,11 @@ router.get("/PreReviewRecipe/:recipeId", async (req, res, next) => {
  router.get("/fullRecipeReview/:recipeId", async (req, res, next) => {
   try {
     const username = req.session.username;
-    const recipes_id = await user_utils.getFavoriteRecipes(username);
-    let recipes = await user_utils.getRecipeDetailsfromDBlastseenrecipes(username);
-    const recipe = await recipes_utils.getRecipeDetails(recipes,recipes_id,req.params.recipeId);
+    const favorite = await user_utils.getFavoriteRecipes(username,req.params.recipeId);
+    let seen = await user_utils.getRecipeDetailsfromDBlastseenrecipes(username,req.params.recipeId);
+    const recipe = await recipes_utils.getRecipeDetails(req.params.recipeId);
+    recipe.favorite = favorite;
+    recipe.seen = seen;
     res.send(recipe);
   } catch (error) {
     next(error);

@@ -6,7 +6,16 @@ async function markAsFavorite(username, recipe_id){
 }
 
 // Retrieves the favorite recipes for a given user
-async function getFavoriteRecipes(username){
+async function getFavoriteRecipes(username,recipe_Id){
+    const recipes_id = await DButils.execQuery(`select recipe_id from favoriterecipes where username='${username}'`);
+    for(let recipeId of recipes_id)
+    {
+        if(recipeId === recipe_Id)
+        return true;
+    }
+    return false;
+}
+async function getFavoriteRecipes_iterate(username,recipe_Id){
     const recipes_id = await DButils.execQuery(`select recipe_id from favoriterecipes where username='${username}'`);
     return recipes_id;
 }
@@ -32,7 +41,7 @@ async function getRecipeDetailsfromDBfamilyrecipes(username) {
         throw new Error("Failed to retrieve recipes for the specified username.");
     }
 }
-async function getRecipeDetailsfromDBlastseenrecipes(username) {
+async function getRecipeDetailsfromDBlastseenrecipes(username,recipe_id) {
     try {
         const query = `
             SELECT recipe_id
@@ -41,7 +50,12 @@ async function getRecipeDetailsfromDBlastseenrecipes(username) {
             ORDER BY date DESC
         `;
         const result = await DButils.execQuery(query);
-        return result;
+        for(let recipeId of result)
+        {
+            if(recipeId === recipe_id)
+            return true;
+        }
+        return false;
     } catch (error) {
         throw new Error("Failed to retrieve last seen recipes for the specified username.");
     }
@@ -116,3 +130,4 @@ exports.getRecipeDetailsfromDB3lastseenrecipes = getRecipeDetailsfromDB3lastseen
 exports.insertRecipeToMyRecipes = insertRecipeToMyRecipes;
 exports.insertRecipeTofamilyrecipes = insertRecipeTofamilyrecipes;
 exports.getRecipeDetailsfromDBlastseenrecipes = getRecipeDetailsfromDBlastseenrecipes;
+exports.getFavoriteRecipes_iterate = getFavoriteRecipes_iterate;
