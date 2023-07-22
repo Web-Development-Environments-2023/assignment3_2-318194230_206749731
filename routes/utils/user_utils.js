@@ -10,7 +10,7 @@ async function getFavoriteRecipes(username,recipe_Id){
     const recipes_id = await DButils.execQuery(`select recipe_id from favoriterecipes where username='${username}'`);
     for(let recipeId of recipes_id)
     {
-        if(recipeId === recipe_Id)
+        if(recipeId.recipe_id === recipe_Id)
         return true;
     }
     return false;
@@ -52,7 +52,7 @@ async function getRecipeDetailsfromDBlastseenrecipes(username,recipe_id) {
         const result = await DButils.execQuery(query);
         for(let recipeId of result)
         {
-            if(recipeId === recipe_id)
+            if(recipeId.recipe_id === recipe_id)
             return true;
         }
         return false;
