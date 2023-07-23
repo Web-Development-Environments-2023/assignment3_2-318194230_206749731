@@ -98,7 +98,7 @@ paths:
             schema:
               type: object
               properties:
-                reciepeId:
+                recipeId:
                   type: string
                   description: reciepe's id which the user saved
                   example: 716429
@@ -109,12 +109,119 @@ paths:
           description: user is not authorized
       security:
       - cookieAuth: []
-  /recipes/{recipeId}:
+
+  /users/MyRecipes:
+    get:
+      tags:
+      - Users
+      summary: Return the recipes of the logging user
+      description: Get an array of recipes that were created by a specific user
+      operationId: GetUserRecipes
+      responses:
+        "200":
+          description: data about the user's created recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipePreview'
+        "401":
+          description: user is not authorized
+
+    post:
+      tags:
+      - Users
+      summary: add recipe to the user's recipes list 
+      description: add recipe to the user's recipes list 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FullRecipeReview'
+      responses:
+        "200":
+          description: The Recipe successfully added
+        "400":
+          description: Invalid input
+
+  /users/FamilyRecipes:
+    get:
+      tags:
+      - Users
+      summary: Return the family recipes of the logging user
+      description: Get an array of recipes that were created by a specific user
+      responses:
+        "200":
+          description: data about the user's created recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FamilyRecipe'
+        "401":
+          description: user is not authorized
+    post:
+      tags:
+        - Users
+      summary: Create a new family recipe
+      description: Create a new recipe associated with the logged-in user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FamilyRecipe'
+      responses:
+        "201":
+          description: Recipe created successfully
+        "401":
+          description: User is not authorized
+  /users/LastViewed:
+    get:
+      tags:
+      - Users
+      summary: Get the  3 recipes viewed by the user
+      description: Retrieves the  3 recipes viewed by the logged-in user. If the user is not logged in, provides an option to log in using the website registration button.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/RecipePreview'
+        "401":
+          description: user is not authorized
+    post:
+      tags:
+      - Users
+      summary: Add recipe to the viewed list of the user
+      description: Add recipe to the viewed list of the user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipe_id:
+                  type: string
+                  description: reciepe's id which the user viewed
+                  example: 716429
+      responses:
+        "200":
+          description: The Recipe successfully saved as viewed
+        "401":
+          description: user is not authorized
+      security:
+      - cookieAuth: []
+
+  
+  /recipes/PreReviewRecipe/{recipeId}:
     get:
       tags:
       - Recipes
-      summary: Return preview details on recipe by his ID
-      description: Return preview details on recipe by his ID
+      summary: Return preview details on recipe by it ID
+      description: Return preview details on recipe by it ID
       parameters:
       - name: recipeId
         in: path
@@ -133,8 +240,191 @@ paths:
                 $ref: '#/components/schemas/RecipePreview'
         "404":
           description: recipeId is not exists
+
+  /recipes/fullRecipeReview/{recipeId}:
+    get:
+      tags:
+      - Recipes
+      summary: Return full details on recipe by it ID
+      description: Return preview details on recipe by it ID
+      parameters:
+      - name: recipeId
+        in: path
+        description: recipe's id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: data about the recipe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FullRecipeReview'
+        "404":
+          description: recipeId is not exists
+
+  /recipes/searchForRecipe:
+    get:
+      tags:
+      - Recipes
+      summary: Search for recipe
+      description: returns search result for recipe
+      operationId: searchForRecipe
+      parameters:
+      - name: query
+        in: "query"
+        description: pass string for looking up a recipe
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: number
+        in: query
+        description: number of records to return
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          
+          enum:
+          - 5
+          - 10
+          - 15
+          default: 5
+      - name: cuisine
+        in: query
+        description: type of cuisine
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          enum:
+          - African
+          - American
+          - British
+          - Cajun
+          - Caribbean
+          - Chinese
+          - Eastern European
+          - European
+          - French
+          - German
+          - Greek
+          - Indian
+          - Irish
+          - Italian
+          - Japanese
+          - Jewish
+          - Korean
+          - Latin American
+          - Mediterranean
+          - Mexican
+          - Middle Eastern
+          - Nordic
+          - Southern
+          - Spanish
+          - Thai
+          - Vietnamese
+      - name: diet
+        in: query
+        description: type of diet
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          enum:
+          - Gluten Free
+          - Ketogenic
+          - Vegetarian
+          - Lacto-Vegetarian
+          - Ovo-Vegetarian
+          - Vegan
+          - Pescetarian
+          - Paleo
+          - Primal
+          - Whole30
+      - name: intolerance
+        in: query
+        description: type of intolerance
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          enum:
+          - Dairy
+          - Egg
+          - Gluten
+          - Grain
+          - Peanut
+          - Seafood
+          - Sesame
+          - Shellfish
+          - Soy
+          - Sulfite
+          - Tree Nut
+          - Wheat
+      responses:
+        "200":
+          description: Search results for recipe
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                arr:
+                  type: array
+                  description: Array of recipes
+                  example:
+                    - recipe1 part info
+                    - recipe2 part info
+                  items:
+                    $ref: '#/components/schemas/RecipePreview'
+              description: Return array of recipes
+      "400":
+        description: Bad request
+  /recipes/random:
+    get:
+      tags:
+        - Recipes
+      summary: Returns a list of three random recipes.
+      responses:
+        "200":
+          description: List of three recipes.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  arr:
+                    type: array
+                    description: Array of recipes
+                    items:
+                      $ref: '#/components/schemas/RecipePreview'
+          examples:
+            example1:
+              value:
+                arr:
+                  - first recipes part info
+                  - second recipe part info
+                  - thirs recipe part info
+        "400":
+          description: Invalid details.
+
 components:
   schemas:
+    randomRecipePreviewList:
+      type: array
+      description: list of randomRecipe
+      items:
+        $ref: '#/components/schemas/RecipePreview'
     User:
       type: object
       properties:
@@ -194,7 +484,7 @@ components:
     RecipePreview:
       type: object
       properties:
-        id:
+        recipe_id:
           type: integer
           description: recipe identifier
           example: 102
@@ -227,4 +517,132 @@ components:
           type: boolean
           description: indication if the recipe is gluten free
           example: false
-  
+    FullRecipeReview:
+        type: object
+        properties:
+          recipe_id:
+            type: integer
+            description: recipe identifier
+            example: 102
+          title:
+            type: string
+            description: recipe name
+            example: Simple Macaroni and Cheese
+          image:
+            type: string
+            description: recipe image
+            format: URL
+            example: https://spoonacular.com/recipeimages/655455-566x370.jpg
+          readyInMinutes:
+            type: integer
+            description: the time takes to make this recipe
+            example: 45
+          popularity:
+            type: integer
+            description: how many likes got this recipe
+            example: 5987
+          vegetarian:
+            type: boolean
+            description: indication if the recipe is vegetarian
+            example: false
+          vegan:
+            type: boolean
+            description: indication if the recipe is vegan
+            example: false
+          glutenFree:
+            type: boolean
+            description: indication if the recipe is gluten free
+            example: false
+          extendedIngredients:
+            type: array
+            description: ingredients list and the quantities.
+            example: [ { name: "milk", number: 2 } ]
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                number:
+                  type: integer
+              example: { name: "milk", number: 2 }
+          instructions:
+            type: string
+            description: The instructions for preparing the recipe          
+          servings:
+            type: integer
+            format: int64
+            description: The number of servings the recipe makes
+          analyzedInstructions:
+            type: array
+            items:
+              items:
+                type: array
+                items:
+                  type: string
+            description: analayzed instructions
+            example: 1. put cheese on ...
+
+    FamilyRecipe:
+      type: object
+      properties:
+        recipe_id:
+          type: integer
+          description: recipe identifier
+          example: 102
+        recipeName:
+          type: string
+          description: name of the recipe
+          example: Grandma's Apple Pie
+        recipeOwner:
+          type: string
+          description: person who owns the recipe
+          example: Grandma Mary
+        components:
+          type: array
+          description: list of ingredients and their quantities
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: ingredient name
+              quantity:
+                type: string
+                description: quantity or measurement of the ingredient
+            example:
+              - name: apples
+                quantity: 4
+              - name: sugar
+                quantity: 1 cup
+        preparationMethod:
+          type: string
+          description: method of preparing the recipe
+        images:
+          type: array
+          description: pictures of the food or family members preparing the food
+          items:
+            type: string
+            format: URL
+          example:
+            - https://example.com/image1.jpg
+            - https://example.com/image2.jpg
+        specialOccasions:
+          type: array
+          description: special occasions or traditions associated with the recipe
+          items:
+            type: string
+          example:
+            - Hanukkah
+            - Passover
+        cookingTime:
+          type: integer
+          description: total cooking time in minutes
+          example: 60
+        serves:
+          type: integer
+          description: number of servings the recipe makes
+# =======
+#           description: number of servings the recipe makes
+#           example: 8
+    
+# >>>>>>> 08d39d39a8e883ad4681d3a28526d3bdc9e57fe8
